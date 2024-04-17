@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config
+3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<typeAliases>
+	
+		<typeAlias alias="Emp" 		type="com.oracle.personal_project.model.Emp"/>
+		<typeAlias alias="Dept" 		type="com.oracle.personal_project.model.Dept"/>
+		<typeAlias alias="Product" 		type="com.oracle.personal_project.model.Product"/>
+		<typeAlias alias="Big_code" 		type="com.oracle.personal_project.model.Big_code"/>
+		<typeAlias alias="Small_code" 		type="com.oracle.personal_project.model.Small_code"/>
+		
+	</typeAliases>
+</configuration>

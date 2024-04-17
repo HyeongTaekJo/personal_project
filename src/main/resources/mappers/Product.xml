@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.personal_project.ProductMapper">
+
+	<select id="productCnt" parameterType="Product" resultType="int">
+		SELECT
+		         COUNT(*)
+		        
+	    FROM 	product
+	    
+	    WHERE
+	        1=1
+	        <if test="p_code != null and p_code != ''">
+	            AND p_code LIKE '%' || #{p_code} || '%'
+	        </if>
+	        <if test="p_name != null and p_name != ''">
+	            AND p_name LIKE '%' || #{p_name} || '%'
+	        </if>
+	        <if test="b_code != null and b_code != ''">
+	            AND b_code LIKE '%' || #{b_code} || '%'
+	        </if>
+	        <if test="s_code != null and s_code != ''">
+	            AND s_code LIKE '%' || #{s_code} || '%'
+	        </if>
+	        <if test="p_cost != null and p_cost != ''">
+	            AND p_cost LIKE '%' || #{p_cost} || '%'
+	        </if>
+	</select>
+		
+	<select id="productList" parameterType="Product" resultType="Product">
+		
+		SELECT *
+		FROM(
+		    SELECT rownum rn, b.*
+		    FROM (
+		        SELECT   
+					 A.p_code AS p_code,
+		             A.p_name AS p_name,
+		             A.b_code AS b_code,
+		             b.b_name AS b_name,
+		             A.s_code AS s_code,
+		             c.s_name AS s_name,
+		             A.p_cost AS p_cost
+	            
+	        FROM product A
+	        LEFT OUTER JOIN big_code b ON a.b_code = b.b_code
+	        LEFT OUTER JOIN small_code c ON a.s_code = c.s_code
+		    
+		    WHERE
+		        1=1
+		        <if test="p_code != null and p_code != ''">
+		            AND a.p_code LIKE '%' || #{p_code} || '%'
+		        </if>
+		        <if test="p_name != null and p_name != ''">
+		            AND a.p_name LIKE '%' || #{p_name} || '%'
+		        </if>
+		        <if test="b_code != null and b_code != ''">
+		            AND a.b_code LIKE '%' || #{b_code} || '%'
+		        </if>
+		        <if test="s_code != null and s_code != ''">
+		            AND a.s_code LIKE '%' || #{s_code} || '%'
+		        </if>
+		        <if test="p_cost != null and p_cost != ''">
+		            AND a.p_cost LIKE '%' || #{p_cost} || '%'
+		        </if>
+		      ORDER BY A.p_code ASC  
+		    ) b
+		)
+	    WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="bigList" resultType="Big_code">
+		SELECT * FROM Big_code
+	</select>
+	
+	<select id="smallList" resultType="Small_code">
+		SELECT * FROM Small_code
+	</select>
+	
+	
+	<delete id="deleteProduct" parameterType="String">
+		DELETE FROM product WHERE p_code = #{p_code}
+	</delete>
+	
+	
+	<select id="findShip" resultType="String">
+		select * from ship where p_code = #{p_code}
+	</select>
+	
+</mapper>
