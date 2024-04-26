@@ -11,6 +11,9 @@
 		<typeAlias alias="Product" 		type="com.oracle.personal_project.model.Product"/>
 		<typeAlias alias="Big_code" 		type="com.oracle.personal_project.model.Big_code"/>
 		<typeAlias alias="Small_code" 		type="com.oracle.personal_project.model.Small_code"/>
+		<typeAlias alias="Customer" 		type="com.oracle.personal_project.model.Customer"/>
+		<typeAlias alias="Ship" 		type="com.oracle.personal_project.model.Ship"/>
+		<typeAlias alias="PlanOrder" 		type="com.oracle.personal_project.model.Plan_order"/>
 		
 	</typeAliases>
 </configuration>

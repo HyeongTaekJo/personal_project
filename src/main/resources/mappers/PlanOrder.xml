@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.personal_project.PlanOrderMapper">
+
+	<select id="planOrderCnt" parameterType="PlanOrder" resultType="int">
+		SELECT
+		         COUNT(*)
+		        
+	    FROM 	plan_order
+	    
+	    WHERE
+	        1=1
+            <if test="date_from != '' and date_to == ''">
+                AND plan_date &gt;= #{date_from}
+            </if>
+            <if test="date_from == '' and date_to != ''">
+                AND plan_date &lt;= #{date_to}
+            </if>
+            <if test="date_from != '' and date_to != ''">
+                AND plan_date BETWEEN #{date_from} AND #{date_to}
+            </if>
+            <if test="plan_code != null and plan_code != ''">
+                AND plan_code LIKE '%' || #{plan_code} || '%'
+            </if>
+	        <if test="p_code != null and p_code != ''">
+	            AND p_code LIKE '%' || #{p_code} || '%'
+	        </if>
+	        <if test="c_code != null and c_code != ''">
+	            AND c_code LIKE '%' || #{c_code} || '%'
+	        </if>
+	</select>
+		
+	<select id="planOrderList" parameterType="PlanOrder" resultType="PlanOrder">
+		SELECT *
+		FROM(
+		    SELECT rownum rn, b.*
+		    FROM (
+		        SELECT   
+					 A.plan_code AS plan_code,
+					 A.ship_code AS ship_code,
+		             A.p_code AS p_code,
+		             B.p_name AS p_name,
+		             A.c_code AS c_code,
+		             C.c_name AS c_name,
+		             D.ship_num AS ship_num,
+		             A.qty AS qty,
+		             A.plan_date AS plan_date,
+		             D.ship_deli AS ship_deli
+		             
+	            
+	        FROM plan_order A
+	        LEFT OUTER JOIN product B ON A.p_code = B.p_code
+	        LEFT OUTER JOIN customer C ON A.c_code = C.c_code
+	        LEFT OUTER JOIN ship D ON A.ship_code = D.ship_code
+		    
+		    WHERE
+		       1=1
+		      	<if test="date_from != '' and date_to == ''">
+	                AND A.plan_date &gt;= #{date_from}
+	            </if>
+	            <if test="date_from == '' and date_to != ''">
+	                AND A.plan_date &lt;= #{date_to}
+	            </if>
+	            <if test="date_from != '' and date_to != ''">
+	                AND A.plan_date BETWEEN #{date_from} AND #{date_to}
+	            </if>
+	            <if test="plan_code != null and plan_code != ''">
+	                AND A.plan_code LIKE '%' || #{plan_code} || '%'
+	            </if>
+		        <if test="p_code != null and p_code != ''">
+		            AND A.p_code LIKE '%' || #{p_code} || '%'
+		        </if>
+		        <if test="c_code != null and c_code != ''">
+		            AND A.c_code LIKE '%' || #{c_code} || '%'
+		        </if>
+		      ORDER BY A.plan_code ASC  
+		    ) b
+		)
+	    WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+
+	
+	<insert id="newPlanInsert" parameterType="java.util.List">    
+	    insert into plan_order(plan_code, ship_code, p_code, c_code, ins_emp, qty, plan_date, ins_date, up_emp, up_date)
+		select PLANORDER_CODE_SEQ.nextval, A.* from(
+		 <foreach item="planList" collection="list" separator="UNION ALL " >
+		   select #{planList.ship_code} as ship_code,
+		   		  #{planList.p_code} as p_code,
+		          #{planList.c_code} as c_code,
+		          10001 as ins_emp,
+		          #{planList.qty} as qty,
+		          #{planList.plan_date} as plan_date,
+		          SYSDATE as ins_date,
+		          10001 as up_emp,
+		          SYSDATE as up_date
+		   from dual
+ 	</foreach>) A
+	</insert>
+	
+	<delete id="deletePlan" parameterType="String">
+		DELETE FROM plan_order WHERE plan_code = #{plan_code}
+	</delete>
+	
+	
+	<select id="findWorkOrder" resultType="String">
+		select * from work_order where plan_code = #{plan_code}
+	</select>
+	
+	
+	
+</mapper>

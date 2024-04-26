@@ -15,7 +15,7 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta content="Codescandy" name="author">
-<title>DADOK-AD</title>
+<title>JOYFACTORY</title>
 <style>
   .float-right {
     float: right;
@@ -142,7 +142,7 @@
 								data-bs-parent="#sideNavbar">
 								<ul class="nav flex-column">
 									<li class="nav-item "><a class="nav-link "
-										href=""> 거래처 조회 </a></li>
+										href="customerList"> 거래처 조회 </a></li>
 									<!-- Nav item -->
 									
 								</ul>
@@ -162,9 +162,9 @@
 								data-bs-parent="#sideNavbar">
 								<ul class="nav flex-column">
 									<li class="nav-item "><a class="nav-link "
-										href=""> 수주 등록 </a></li>
+										href="shipList"> 수주 등록 </a></li>
 									<li class="nav-item "><a class="nav-link "
-										href=""> 생산계획 등록 </a></li>
+										href="planOrderList"> 생산계획 등록 </a></li>
 									<li class="nav-item "><a class="nav-link "
 										href=""> 작업지시 등록 </a></li>
 									<li class="nav-item "><a class="nav-link "
@@ -250,7 +250,7 @@
 								data-bs-parent="#sideNavbar">
 								<ul class="nav flex-column">
 									<li class="nav-item "><a class="nav-link "
-										href=""> 거래처 조회 </a></li>
+										href="customerList"> 거래처 조회 </a></li>
 									<!-- Nav item -->
 									
 								</ul>
@@ -270,9 +270,9 @@
 								data-bs-parent="#sideNavbar">
 								<ul class="nav flex-column">
 									<li class="nav-item "><a class="nav-link "
-										href=""> 수주 등록 </a></li>
+										href="shipList"> 수주 등록 </a></li>
 									<li class="nav-item "><a class="nav-link "
-										href=""> 생산계획 등록 </a></li>
+										href="planOrderList"> 생산계획 등록 </a></li>
 									<li class="nav-item "><a class="nav-link "
 										href=""> 작업지시 등록 </a></li>
 									<li class="nav-item "><a class="nav-link "

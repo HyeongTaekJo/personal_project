@@ -53,22 +53,13 @@
 	        }
 	    });
 	});
-
-
-
-	$(function() {
-		if('${result}' == '1'){
-			alert("정상적으로 완료되었습니다.");
-		}
-	});
-	
 	
 	//삭제
-	function deleteProduct(p_code, pIndex){
+	function deleteCustomer(c_code, pIndex){
 		if(confirm("상품을 삭제하시겠습니까?")){
 			$.ajax({
-					url : "deleteProduct",
-					data : {p_code : p_code},
+					url : "deleteCustomer",
+					data : {c_code : c_code},
 					dataType : 'Text',
 					success : function(data){
 						if(data == '1'){
@@ -78,10 +69,10 @@
 							  
 							  // 행(Row) 삭제
 							  //const newRow = table.deleteRow(pIndex);
-							  searchProduct();
+							  searchCustomer();
 						}else if(data == '2'){
 							// table element 찾기
-							  alert("수주가 등록된 제품은 삭제할 수 없습니다.");
+							  alert("수주가 등록된 거래처는 삭제할 수 없습니다.");
 							 
 						}else {
 							alert("삭제에 실패하였습니다.");
@@ -120,63 +111,60 @@
 	  const newCell5 = newRow.insertCell(4);
 	  const newCell6 = newRow.insertCell(5);
 	  const newCell7 = newRow.insertCell(6);
-	  
-	// 대분류 콤보박스 생성
-	  var select1 = document.createElement("select");
-	  select1.setAttribute("class", "form-select");
-	  select1.setAttribute("id", "validationCustom04_b");
-	  select1.setAttribute("name", "b_code");
-	  select1.setAttribute("style", "width: 200px; padding: 5px; text-align: center; ");
-	  select1.setAttribute("required", ""); // 대분류 선택 필수로 설정
-
-	  // 대분류 목록 추가
-	  <c:forEach var="bigList" items="${bigList}">
-	      var option = document.createElement("option");
-	      option.setAttribute("value", "${bigList.b_code}");
-	      option.textContent = "${bigList.b_name}";
-	      select1.appendChild(option);
-	  </c:forEach>
-
-	  // 셀에 콤보박스 추가
-	  var div1 = document.createElement("div");
-	  div1.setAttribute("class", "col-md-2");
-
-	  div1.appendChild(select1);
-
-
-	  // 소분류 콤보박스 생성
-	  var select2 = document.createElement("select");
-	  select2.setAttribute("class", "form-select");
-	  select2.setAttribute("id", "validationCustom05_s");
-	  select2.setAttribute("name", "s_code");
-	  select2.setAttribute("style", "width: 200px; padding: 5px; text-align: center;");
-	  select2.setAttribute("required", ""); // 소분류 선택 필수로 설정
-
-	  // 소분류 목록 추가
-	  <c:forEach var="smallList" items="${smallList}">
-	      var option = document.createElement("option");
-	      option.setAttribute("value", "${smallList.s_code}");
-	      option.textContent = "${smallList.s_name}";
-	      select2.appendChild(option);
-	  </c:forEach>
-
-	  // 셀에 콤보박스 추가
-	  var div2 = document.createElement("div");
-	  div2.setAttribute("class", "col-md-2");
-
-	  div2.appendChild(select2);
+	  const newCell8 = newRow.insertCell(7); // 새로운 셀 추가
 	  
 	  // Cell에 텍스트 추가
-	  newCell1.innerText = ''; // NO 컬럼은 입력 필요 없으므로 빈 문자열로 설정
-	  newCell2.innerText = ''; // 제품코드 역시 입력 필요 없으므로 빈 문자열로 설정
-	  newCell3.innerHTML = '<input type="text" class="form-control" name="p_name" placeholder="제품명" style="width: 230px; padding: 5px; text-align: center; margin-left: 80px;" required>';
-	  // newCell4에 콤보박스 추가
-	  newCell4.appendChild(div1);
-	  // newCell5에 콤보박스 추가
-	  newCell5.appendChild(div2);
-	  newCell6.innerHTML = '<input type="text" class="form-control" name="p_cost" placeholder="가격" style="width: 230px; padding: 5px; text-align: center;" margin-left: 100px;" required>';
-	  
-	  // 삭제 버튼 클릭 이벤트 핸들러 등록
+	  newCell1.innerText = ''; // NO
+	  newCell2.innerText = ''; // 거래처 코드
+	  newCell3.innerHTML = '<input type="text" class="form-control" name="c_name" placeholder="거래처명" style="width: 150px; padding: 5px; text-align: center; margin-left: 80px;" required>';
+	  newCell4.innerHTML = '<input type="tel" class="form-control" name="b_tel" placeholder="연락처" style="width: 180px; padding: 5px; text-align: center;" required>';
+	  newCell5.innerHTML = '<input type="email" class="form-control" name="b_address" placeholder="이메일" style="width: 230px; padding: 5px; text-align: center;" required>';
+	  // newCell6에 콤보박스 추가 (거래처 담당자)
+	  var select3 = document.createElement("select");
+	  select3.setAttribute("class", "form-select");
+	  select3.setAttribute("id", "validationCustom06_e");
+	  select3.setAttribute("name", "e_code");
+	  select3.setAttribute("style", "width: 120px; padding: 5px; text-align: center;");
+	  select3.setAttribute("required", ""); // 거래처 담당자 선택 필수로 설정
+	
+	  // 거래처 담당자 목록 추가
+	  <c:forEach var="empList" items="${empList}">
+	      var option = document.createElement("option");
+	      option.setAttribute("value", "${empList.e_code}");
+	      option.textContent = "${empList.e_name}";
+	      select3.appendChild(option);
+	  </c:forEach>
+	
+	  // 셀에 콤보박스 추가
+	  var div3 = document.createElement("div");
+	  div3.setAttribute("class", "col-md-2");
+	
+	  div3.appendChild(select3);
+	  newCell6.appendChild(div3);
+	  // newCell7에 콤보박스 추가 (거래처 구분)
+	  var select4 = document.createElement("select");
+	  select4.setAttribute("class", "form-select");
+	  select4.setAttribute("id", "validationCustom07_s");
+	  select4.setAttribute("name", "s_code");
+	  select4.setAttribute("style", "width: 100px; padding: 5px; text-align: center;");
+	  select4.setAttribute("required", ""); // 거래처 구분 선택 필수로 설정
+	
+	  // 거래처 구분 목록 추가
+	  <c:forEach var="flagList" items="${flagList}">
+	      var option = document.createElement("option");
+	      option.setAttribute("value", "${flagList.s_code}");
+	      option.textContent = "${flagList.s_name}";
+	      select4.appendChild(option);
+	  </c:forEach>
+	
+	  // 셀에 콤보박스 추가
+	  var div4 = document.createElement("div");
+	  div4.setAttribute("class", "col-md-2");
+	
+	  div4.appendChild(select4);
+	  newCell7.appendChild(div4);
+	
+	// 삭제 버튼 클릭 이벤트 핸들러 등록
       var deleteButton = document.createElement("button");
       deleteButton.setAttribute("type", "button");
       deleteButton.setAttribute("class", "btn btn-danger deleteButton");
@@ -186,11 +174,7 @@
 									      deleteRow(newRow.rowIndex); // 해당 버튼의 행의 인덱스를 넘겨주어 행을 삭제
 									      };
       
-      newCell7.appendChild(deleteButton);
-      
-	  //newCell7.innerHTML = '<button type="button" class="btn btn-danger deleteButton" onclick="deleteRow()">삭제</button>';
-	
-	  
+      newCell8.appendChild(deleteButton);
 	}
 	
 	// 행 삭제
@@ -206,62 +190,64 @@
 	$(function() {
 	    $('#searchButton').click(function() {
 	        // 조건에 따른 검색 실행
-	        searchProduct();
+	        searchCustomer();
 	    });
 	}) 
 
     // 조건에 따른 검색을 수행하는 함수
-    function searchProduct() {
+    function searchCustomer() {
+		
+		
         var sendData = $('#form1').serialize();
         //alert(sendData);
-        location.href = "productList?" + sendData;
+        location.href = "customerList?" + sendData;
     }
-	
 	
 	$(function() {
 	    $('#saveButton').click(function() {
-	        var productList = []; // 제품 정보를 담을 배열 선언
+	        var customerList = []; // 제품 정보를 담을 배열 선언
 	        var isValid = true; // 유효성 검사를 위한 변수 추가
-
-	        // 테이블의 각 행을 순회하며 값을 가져와서 배열에 추가 및 유효성 검사
+	        
+	        // 테이블의 각 행을 순회하며 값을 가져와서 배열에 추가
 	        $('#list tbody tr').each(function() {
-	            var p_code = $(this).find('td:eq(1)').text(); // 제품 코드 가져오기
-	            if (!p_code.trim()) { // p_code가 비어있는 경우만 추가
-	                var product = {
-	                    p_name: $(this).find('td:eq(2) input').val(), // 제품명 가져오기
-	                    b_code: $(this).find('td:eq(3) select').val(), // 대분류 코드 가져오기
-	                    s_code: $(this).find('td:eq(4) select').val(), // 소분류 코드 가져오기
-	                    p_cost: $(this).find('td:eq(5) input').val() // 가격 가져오기
+	            var c_code = $(this).find('td:eq(1)').text(); // 제품 코드 가져오기
+	            if (!c_code.trim()) { // c_code가 비어있는 경우만 추가
+	                var customer = {
+	                    c_name: $(this).find('td:eq(2) input').val(), // 거래처명 가져오기
+	                    c_tel: $(this).find('td:eq(3) input').val(), // 거래처 연락처가져오기
+	                    c_email: $(this).find('td:eq(4) input').val(), // 거래처 이메일 가져오기
+	                    e_code: $(this).find('td:eq(5) select').val(), // 거래처 코드 가져오기
+	                    s_code: $(this).find('td:eq(6) select').val(), // 거래처구분 코드 가져오기
 	                };
-
-	                // 유효성 검사 추가
-	                if (!product.p_name || !product.b_code || !product.s_code || !product.p_cost) {
+	            
+	            	 // 유효성 검사 추가
+	                if (!customer.c_name || !customer.c_tel || !customer.c_email ) {
 	                    isValid = false;
 	                    return false; // 유효성 검사 실패 시 반복문 종료
 	                }
-
-	                productList.push(product); // 제품 정보를 배열에 추가
+	            
+	                customerList.push(customer); // 제품 정보를 배열에 추가
 	            }
 	        });
-
-	        // 모든 요소가 유효한지 확인
+	        
+	     	// 모든 요소가 유효한지 확인
 	        if (!isValid) {
 	            // 유효성 검사 실패 시 처리
 	            alert("양식을 모두 입력하세요.");
 	            return; // 함수 종료
 	        }
-
+	        
 	        // 배열을 JSON 형식으로 직렬화
-	        var jsonData = JSON.stringify(productList);
-
+	        var jsonData = JSON.stringify(customerList);
+	        
 	        // Ajax 요청 보내기
 	        $.ajax({
 	            type: "POST", // POST 방식으로 요청
-	            url: "newProductInsert", // 요청을 보낼 URL
+	            url: "newCustomertInsert", // 요청을 보낼 URL
 	            contentType: "application/json", // 전송할 데이터의 타입을 JSON으로 설정
 	            data: jsonData, // JSON 데이터를 전송
 	            success: function(response) {
-	                if (response == 'fail') {
+	            	if (response == -1) {
 	                    // 요청이 성공했을 때 실행되는 콜백 함수
 	                    console.log("응답 데이터:", response);
 	                    // 성공 메시지 등을 표시할 수 있음
@@ -301,7 +287,7 @@
 <!-- 팝업 창 HTML -->
 <div id="popupFail" class="pop_wrap" style="display: none;">
     <div class="pop_inner" style="max-width: 400px;"> <!-- 너비 조정 -->
-        <p style="padding: 10px;">중복된 제품명이 있습니다.</p>
+        <p style="padding: 10px;">중복된 거래처명이 있습니다.</p>
         <button onclick="confirmAndSearch2()" class="btn btn-primary">확인</button>
     </div>
 </div>
@@ -329,7 +315,7 @@
     }
     function confirmAndSearch() {
         closePopup(); // 팝업 창 닫기
-        searchProduct(); // 검색 실행
+        searchCustomer(); // 검색 실행
     }
 </script>
 
@@ -343,21 +329,21 @@
 			        <!-- 상품목록 -->
 				    <div class="mb-8">
 				       <!-- heading -->
-				       <h1 class="mb-1">제품 조회</h1>
-				       <p>총  ${productCnt } 건</p>
+				       <h1 class="mb-1">거래처 조회</h1>
+				       <p>총  ${customerCnt} 건</p>
 				    </div>
 				    <!-- 제품조회 -->
 				     <div class="row" id="k" style="margin-bottom: 10px;">
 					    <div class="col-md-2">
-					        <label for="validationCustom01" class="form-label">제품코드</label>
-					        <input type="text" class="form-control" id="validationCustom01" name="p_code" style="max-width: 200px;" placeholder="제품코드 입력" oninput="checkNumber(this);" value="${product.p_code}">
+					        <label for="validationCustom01" class="form-label">거래처코드</label>
+					        <input type="text" class="form-control" id="validationCustom01" name="c_code" style="max-width: 200px;" placeholder="거래처코드 입력" oninput="checkNumber(this);" value="${customer.c_code}">
 					    </div>
 					    <div class="col-md-2">
-					        <label for="validationCustom04" class="form-label">대분류</label>
-					        <select class="form-select" id="validationCustom04" name="b_code" style="max-width: 200px;" >
+					        <label for="validationCustom04" class="form-label">담당자</label>
+					        <select class="form-select" id="validationCustom04" name="e_code" style="max-width: 200px;" >
 					        	<option value="" selected="selected">전체</option>
-					        	<c:forEach var="bigList" items="${bigList}">
-					        		 <option value="${bigList.b_code}" ${bigList.b_code eq product.b_code ? 'selected' : ''}>${bigList.b_name}</option>
+					        	<c:forEach var="empList" items="${empList}">
+					        		 <option value="${empList.e_code}" ${empList.e_code eq customer.e_code ? 'selected' : ''}>${empList.e_name}</option>
 					        		<%-- <option value="${bigList.b_code}">${bigList.b_name}</option> --%>
 					        	</c:forEach>
 					        </select>
@@ -367,15 +353,15 @@
 					<!-- 분류 -->
 					<div class="row" id="k2" style="margin-bottom: 20px;">
 					    <div class="col-md-2">
-						     <label for="validationCustom02" class="form-label">제품명</label>
-						     <input type="text" class="form-control" id="validationCustom02"  name="p_name" placeholder="제품명 입력" style="max-width: 200px;" value="${product.p_name}">
+						     <label for="validationCustom02" class="form-label">거래처명</label>
+						     <input type="text" class="form-control" id="validationCustom02"  name="c_name" style="max-width: 200px;" placeholder="거래처명 입력" value="${customer.c_name}">
 					    </div>
 					    <div class="col-md-2">
-					        <label for="validationCustom05" class="form-label">소분류</label>
+					        <label for="validationCustom05" class="form-label">거래처구분</label>
 					        <select class="form-select" id="validationCustom04" name="s_code" style="max-width: 200px;">
 					        	<option value="" selected="selected">전체</option>
-					        	<c:forEach var="smallList" items="${smallList}">
-					        		<option value="${smallList.s_code}" ${smallList.s_code eq product.s_code ? 'selected' : ''}>${smallList.s_name}</option>
+					        	<c:forEach var="flagList" items="${flagList}">
+					        		<option value="${flagList.s_code}" ${flagList.s_code eq customer.s_code ? 'selected' : ''}>${flagList.s_name}</option>
 					        		<%-- <option value="${smallList.s_code}">${smallList.s_name}</option> --%>
 					        	</c:forEach>
 					        </select>
@@ -407,27 +393,28 @@
 		             <thead class="table-light">
 		                <tr>
 		                   <th>No.</th>
-		                   <th>제품코드</th>
-		                   <th>제품명</th>
-		                   <th>대분류</th>
-		                   <th>소분류</th>
-		                   <th>가격</th>
+		                   <th>거래처 코드</th>
+		                   <th>거래처명</th>
+		                   <th>거래처 연락처</th>
+		                   <th>거래처 이메일</th>
+		                   <th>거래처 담당자</th>
+		                   <th>거래처 구분</th>
 		                   <th>삭제</th>
 		                </tr>
 		             </thead>
 		             <tbody>
-		             	<c:forEach var="productList" items="${productList }" varStatus="status">
+		             	<c:forEach var="customerList" items="${customerList }" varStatus="status">
 			                <tr id="product${status.index }">
 			                   <td class="align-middle">${startRow}</td>
-			                   <td class="align-middle">${productList.p_code}  </td>
-			                   <td class="align-middle">${productList.p_name}  </td>
-			                   <td class="align-middle">${productList.b_name}  </td>
-			                   <td class="align-middle">${productList.s_name}  </td>
-			                   <td class="align-middle">  					  
-						         <fmt:formatNumber value="${productList.p_cost}" pattern="#,##0"/>
-						        </td>
+			                   <td class="align-middle">${customerList.c_code}  </td>
+			                   <td class="align-middle">${customerList.c_name}  </td>
+			                   <td class="align-middle">${customerList.c_tel}  </td>
+			                   <td class="align-middle">${customerList.c_email}  </td>
+			                   <td class="align-middle">${customerList.e_name}  </td>
+			                   <td class="align-middle">${customerList.s_name}  </td>
+			                   
 					           <td class="align-middle">
-						            <button type="button" class="btn btn-danger deleteButton" onclick="deleteProduct('${productList.p_code}', '${status.index+1}')">삭제</button>
+						            <button type="button" class="btn btn-danger deleteButton" onclick="deleteCustomer('${customerList.c_code}', '${status.index+1}')">삭제</button>
 						        </td>
 			                </tr>
 			                <c:set var="startRow" value="${startRow + 1}"/>
@@ -439,7 +426,6 @@
 
 		</div>
 	</div>
-	
 	<!-- 페이징 처리 -->
 	<div class="row mt-8">
 	  <div class="d-flex justify-content-center">
@@ -449,7 +435,7 @@
 	        <!-- 이전버튼 -->
 	        <c:if test="${page.startPage > page.pageLimit}">
 		        <li class="page-item">
-		          <a class="page-link  mx-1 " href="productList?currentPage=${page.startPage-page.pageLimit}&p_code=${product.p_code}&b_code=${product.b_code}&p_name=${product.p_name}&s_code=${product.s_code}" aria-label="Previous">
+		          <a class="page-link  mx-1 " href="customerList?currentPage=${page.startPage-page.pageLimit}&c_code=${customer.c_code}&c_name=${customer.c_name}&e_code=${customer.e_code}&s_code=${customer.s_code}" aria-label="Previous">
 		            	이전
 		          </a>
 		        </li>
@@ -457,13 +443,13 @@
 	        
 	        <!-- 페이지 넘버 -->
 	        <c:forEach var="i" begin="${page.startPage }" end="${page.endPage }" varStatus="status">
-	        	<li id="page${status.index}" class="page-item"><a class="page-link mx-1 text-body" href="productList?currentPage=${i}&p_code=${product.p_code}&b_code=${product.b_code}&p_name=${product.p_name}&s_code=${product.s_code}">${i }</a></li>
+	        	<li id="page${status.index}" class="page-item"><a class="page-link mx-1 text-body" href="customerList?currentPage=${i}&c_code=${customer.c_code}&c_name=${customer.c_name}&e_code=${customer.e_code}&s_code=${customer.s_code}">${i }</a></li>
 	        </c:forEach>
 	         
 	        <!-- 다음 버튼 -->
 	        <c:if test="${page.endPage < page.totalPage}">
 		        <li class="page-item">
-		          <a class="page-link mx-1 text-body" href="productList?currentPage=${page.startPage+page.pageLimit}&p_code=${product.p_code}&b_code=${product.b_code}&p_name=${product.p_name}&s_code=${product.s_code}" aria-label="Next">
+		          <a class="page-link mx-1 text-body" href="customerList?currentPage=${page.startPage+page.pageLimit}&c_code=${customer.c_code}&c_name=${customer.c_name}&e_code=${customer.e_code}&s_code=${customer.s_code}" aria-label="Next">
 		            	다음
 		          </a>
 		        </li>

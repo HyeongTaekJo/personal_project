@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.personal_project.CustomerMapper">
+
+	<select id="customerCnt" parameterType="Customer" resultType="int">
+		SELECT
+		         COUNT(*)
+		        
+	    FROM 	customer
+	    
+	    WHERE
+	        1=1
+	        <if test="c_code != null and c_code != ''">
+	            AND c_code LIKE '%' || #{c_code} || '%'
+	        </if>
+	        <if test="c_name != null and c_name != ''">
+	            AND c_name LIKE '%' || #{c_name} || '%'
+	        </if>
+	        <if test="e_code != null and e_code != ''">
+	            AND e_code LIKE '%' || #{e_code} || '%'
+	        </if>
+	        <if test="s_code != null and s_code != ''">
+	            AND s_code LIKE '%' || #{s_code} || '%'
+	        </if>
+	</select>
+		
+	<select id="customerList" parameterType="Customer" resultType="Customer">
+		SELECT *
+		FROM(
+		    SELECT rownum rn, b.*
+		    FROM (
+		        SELECT   
+					 A.c_code AS c_code,
+		             A.c_name AS c_name,
+		             A.c_tel AS c_tel,
+		             A.c_email AS c_email,
+		             A.e_code AS e_code,
+		             b.e_name AS e_name,
+		             A.s_code AS s_code,
+		             C.s_name AS S_name
+		             
+	            
+	        FROM customer A
+	        LEFT OUTER JOIN emp b ON a.e_code = b.e_code
+	        LEFT OUTER JOIN small_code c ON a.s_code = c.s_code
+		    
+		    WHERE
+		        1=1
+		        <if test="c_code != null and c_code != ''">
+		            AND a.c_code LIKE '%' || #{c_code} || '%'
+		        </if>
+		        <if test="c_name != null and c_name != ''">
+		            AND a.c_name LIKE '%' || #{c_name} || '%'
+		        </if>
+		        <if test="c_tel != null and c_tel != ''">
+		            AND a.c_tel LIKE '%' || #{c_tel} || '%'
+		        </if>
+		        <if test="c_email != null and c_email != ''">
+		            AND a.c_email LIKE '%' || #{c_email} || '%'
+		        </if>
+		        <if test="e_code != null and e_code != ''">
+		            AND a.e_code LIKE '%' || #{e_code} || '%'
+		        </if>
+		        <if test="s_code != null and s_code != ''">
+		            AND a.s_code LIKE '%' || #{s_code} || '%'
+		        </if>
+		      ORDER BY A.c_code ASC  
+		    ) b
+		)
+	    WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="empList" resultType="Emp">
+		SELECT * FROM emp
+	</select>
+	
+	<select id="customerSmallList" resultType="Small_code">
+		SELECT * FROM Small_code WHERE b_code = 40
+	</select>
+	
+	<insert id="newCustomerInsert" parameterType="java.util.List">    
+	    insert into customer(c_code, c_name, c_tel, c_email, e_code, s_code)
+		select CUSTOMER_C_CODE_SEQ.nextval, A.* from(
+		 <foreach item="dataList" collection="list" separator="UNION ALL " >
+		   select #{dataList.c_name} as c_name,
+		          #{dataList.c_tel} as c_tel,
+		          #{dataList.c_email} as c_email,
+		          #{dataList.e_code} as e_code,
+		          #{dataList.s_code} as s_code
+		   from dual
+ 	</foreach>) A
+	</insert>
+	
+	<delete id="deleteCustomer" parameterType="String">
+		DELETE FROM customer WHERE c_code = #{c_code}
+	</delete>
+	
+	
+	<select id="findShip_customer" resultType="String">
+		select * from ship where c_code = #{c_code}
+	</select>
+	
+	<select id="findCustomerName" parameterType="java.util.List" resultType="Customer">
+		<foreach item="customertList" collection="list" separator="UNION ALL " >
+			select * 
+			from customer 
+			where c_name = #{customertList.c_name}
+		</foreach>
+	</select>
+	
+</mapper>

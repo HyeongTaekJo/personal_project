@@ -1,5 +1,7 @@
 package com.oracle.personal_project.model;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -8,7 +10,9 @@ public class Product {	//제품
 	private String p_name;  //제품명
 	private String b_code;  //대분류 코드
 	private String s_code;  //소분류 코드
-	private int p_cost; 	// 제품가격
+	private String p_cost; 	// 제품가격
+	
+	//private List<Product> productList;
 	
 	// 조회용
 	private String 	pageNum;			// 페이징번호

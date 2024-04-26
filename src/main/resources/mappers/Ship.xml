@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.personal_project.ShipMapper">
+
+	<select id="shipCnt" parameterType="Ship" resultType="int">
+		SELECT
+		         COUNT(*)
+		        
+	    FROM 	ship
+	    
+	    WHERE
+	        1=1
+            <if test="date_from != '' and date_to == ''">
+                AND ship_date &gt;= #{date_from}
+            </if>
+            <if test="date_from == '' and date_to != ''">
+                AND ship_date &lt;= #{date_to}
+            </if>
+            <if test="date_from != '' and date_to != ''">
+                AND ship_date BETWEEN #{date_from} AND #{date_to}
+            </if>
+            <if test="ship_code != null and ship_code != ''">
+                AND ship_code LIKE '%' || #{ship_code} || '%'
+            </if>
+	        <if test="ship_code != null and ship_code != ''">
+	            AND ship_code LIKE '%' || #{ship_code} || '%'
+	        </if>
+	        <if test="p_code != null and p_code != ''">
+	            AND p_code LIKE '%' || #{p_code} || '%'
+	        </if>
+	        <if test="c_code != null and c_code != ''">
+	            AND c_code LIKE '%' || #{c_code} || '%'
+	        </if>
+	</select>
+		
+	<select id="shipList" parameterType="Ship" resultType="Ship">
+		SELECT *
+		FROM(
+		    SELECT rownum rn, b.*
+		    FROM (
+		        SELECT   
+					 A.ship_code AS ship_code,
+		             A.p_code AS p_code,
+		             B.p_name AS p_name,
+		             A.c_code AS c_code,
+		             C.c_name AS c_name,
+		             A.ship_num AS ship_num,
+		             A.ship_date AS ship_date,
+		             A.ship_deli AS ship_deli,
+		             A.ins_emp AS ins_emp,
+		             D.e_name AS e_name
+		             
+	            
+	        FROM ship A
+	        LEFT OUTER JOIN product B ON A.p_code = B.p_code
+	        LEFT OUTER JOIN customer C ON A.c_code = C.c_code
+	        LEFT OUTER JOIN emp D ON A.ins_emp = D.e_code
+		    
+		    WHERE
+		       1=1
+		      	<if test="date_from != '' and date_to == ''">
+	                AND A.ship_date &gt;= #{date_from}
+	            </if>
+	            <if test="date_from == '' and date_to != ''">
+	                AND A.ship_date &lt;= #{date_to}
+	            </if>
+	            <if test="date_from != '' and date_to != ''">
+	                AND ship_date BETWEEN #{date_from} AND #{date_to}
+	            </if>
+		        <if test="ship_code != null and ship_code != ''">
+		            AND A.ship_code LIKE '%' || #{ship_code} || '%'
+		        </if>
+		        <if test="p_code != null and p_code != ''">
+		            AND A.p_code LIKE '%' || #{p_code} || '%'
+		        </if>
+		        <if test="c_code != null and c_code != ''">
+		            AND A.c_code LIKE '%' || #{c_code} || '%'
+		        </if>
+		      ORDER BY A.ship_code ASC  
+		    ) b
+		)
+	    WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	<select id="productList2" resultType="Product">
+		SELECT * FROM product
+	</select>
+	
+	<select id="customerList2" resultType="Customer">
+		SELECT * FROM customer
+	</select>
+	
+	<insert id="newShiptInsert" parameterType="java.util.List">    
+	    insert into ship(ship_code, p_code, c_code, ship_num, ship_date, ship_deli, ins_emp, ins_date, up_emp, up_date)
+		select SHIP_CODE_SEQ.nextval, A.* from(
+		 <foreach item="shipList" collection="list" separator="UNION ALL " >
+		   select #{shipList.p_code} as p_code,
+		          #{shipList.c_code} as c_code,
+		          #{shipList.ship_num} as ship_num,
+		          #{shipList.ship_date} as ship_date,
+		          #{shipList.ship_deli} as ship_deli,
+		          #{shipList.e_code} as ins_emp,
+		          SYSDATE as ins_date,
+		          #{shipList.e_code} as up_emp,
+		          SYSDATE as up_date
+		   from dual
+ 	</foreach>) A
+	</insert>
+	
+	<delete id="deleteShip" parameterType="String">
+		DELETE FROM ship WHERE ship_code = #{ship_code}
+	</delete>
+	
+	
+	<select id="findPlanOrder" resultType="String">
+		select * from plan_order where ship_code = #{ship_code}
+	</select>
+	
+	<select id="shipListModal" resultType="Ship">
+		SELECT   
+		    A.ship_code AS ship_code,
+		    A.p_code AS p_code,
+		    B.p_name AS p_name,
+		    A.c_code AS c_code,
+		    C.c_name AS c_name,
+		    A.ship_num AS ship_num,
+		    A.ship_date AS ship_date,
+		    A.ship_deli AS ship_deli,
+		    A.ins_emp AS ins_emp,
+		    D.e_name AS e_name,
+		    A.ship_num - COALESCE(SUM(PO.qty), 0) AS adjusted_ship_num
+		            
+		FROM ship A
+		LEFT OUTER JOIN product B ON A.p_code = B.p_code
+		LEFT OUTER JOIN customer C ON A.c_code = C.c_code
+		LEFT OUTER JOIN emp D ON A.ins_emp = D.e_code
+		LEFT OUTER JOIN plan_order PO ON A.ship_code = PO.ship_code
+		GROUP BY A.ship_code, A.p_code, B.p_name, A.c_code, C.c_name, A.ship_num, A.ship_date, A.ship_deli, A.ins_emp, D.e_name
+		HAVING COALESCE(SUM(PO.qty), 0) <![CDATA[ < ]]> A.ship_num
+		ORDER BY A.ship_code
+	</select>
+	
+</mapper>

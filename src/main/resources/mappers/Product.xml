@@ -72,11 +72,11 @@
 	</select>
 	
 	<select id="bigList" resultType="Big_code">
-		SELECT * FROM Big_code
+		SELECT * FROM Big_code WHERE b_code BETWEEN 10 AND 30 
 	</select>
 	
 	<select id="smallList" resultType="Small_code">
-		SELECT * FROM Small_code
+		SELECT * FROM Small_code WHERE b_code BETWEEN 10 AND 30 
 	</select>
 	
 	
@@ -89,4 +89,34 @@
 		select * from ship where p_code = #{p_code}
 	</select>
 	
+<!-- 	<insert id="newProductInsert" parameterType="java.util.List">
+		<foreach collection="list" item="dataList"  separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">
+
+	    INTO product (p_code, p_name, b_code, s_code, p_cost)
+	    VALUES
+	        (PRODUCT_P_CODE_SEQ.NEXTVAL, #{dataList.p_name}, #{dataList.b_code}, #{dataList.s_code}, #{dataList.p_cost})
+	    </foreach>
+	</insert> -->
+	
+	<insert id="newProductInsert" parameterType="java.util.List">    
+	    insert into product(p_code, p_name, b_code, s_code, p_cost)
+		select PRODUCT_P_CODE_SEQ.nextval, A.* from(
+		 <foreach item="dataList" collection="list" separator="UNION ALL " >
+		   select #{dataList.p_name} as p_name,
+		          #{dataList.b_code} as b_code,
+		          #{dataList.s_code} as s_code,
+		          #{dataList.p_cost} as p_cost
+		   from dual
+ 	</foreach>) A
+	</insert>
+	
+	<select id="findProductName" parameterType="java.util.List" resultType="Product">
+		<foreach item="dataList" collection="list" separator="UNION ALL " >
+			select * 
+			from product 
+			where p_name = #{dataList.p_name}
+		</foreach>
+	</select>
+
+
 </mapper>
