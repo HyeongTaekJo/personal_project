@@ -20,4 +20,13 @@ public class Product {	//제품
 	private int 	end;				// 페이징 종료번호
 	private String  b_name;				// 대분류 이름
 	private String  s_name;				// 소분류 이름
+	
+	private float 	totalOrderPrice;	 // 이번달 총 발주금액
+	private float 	lastTotalOrderPrice; // 저번달 총 발주금액
+	
+	private float 	totalIncomePrice;	 // 이번달 총 입고금액
+	private float 	lastTotalIncomePrice; // 저번달 총 입고금액
+	
+	private float 	totalDefectPrice;	 // 이번달 총 불량금액
+	private float 	lastTotalDefectPrice; // 저번달 총 불량금액
 }

@@ -27,4 +27,5 @@ public class Plan_order {
 	private String  date_to;  			// 수주종료일자
 	private String  ship_deli;			// 납품일자
 	private float 	ship_num;			// 수주수량
+	private float  adjusted_plan_num;  	// 남은 수주수량
 }	

@@ -38,10 +38,14 @@ dependencies {
 	implementation group: 'net.sf.supercsv', name: 'super-csv', version: '2.4.0'
 	
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
+	
+	//오라클 클라우드 접속하기 위한 라이브러리 추가
+	//runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
+	runtimeOnly 'com.oracle.database.jdbc:ojdbc11:21.5.0.0'
 	implementation 'com.oracle.database.security:osdt_cert'
 	implementation 'com.oracle.database.security:oraclepki'
 	implementation 'com.oracle.database.security:osdt_core'
+	
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.3.1'

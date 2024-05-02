@@ -71,7 +71,7 @@
           	 <div class="col-6 text-end d-none d-md-block">
 
 
-				 <c:if test="${sessionScope.member == null }">
+				 <c:if test="${sessionScope.emp == null }">
              			<div class="list-inline-item me-6">
 						<!-- 로그인 아이콘 -->
 				       	<a href="loginForm" class="position-relative text-success">                  
@@ -91,18 +91,18 @@
 		                </div>
 		                
 		                
-	                    <div class="list-inline-item me-6">
+	                   <%--  <div class="list-inline-item me-6">
 						<a href="memberMyPage?m_num=${member.m_num }" class="text-success">
 							<strong><i class="bi bi-person-circle"></i>&nbsp;
 							마이페이지</strong>
 		               		<span class="visually-hidden">unread messages</span>
 		               	</a>
-		               	</div>
+		               	</div> --%>
 		                
 		          </c:if> 
 		                
 		            <!-- 로그인 시 -->
-			     		<c:if test="${sessionScope.member != null }">
+			     		<c:if test="${sessionScope.emp != null }">
 			                <!-- 장바구니 아이콘 -->
 						    <div class="list-inline-item me-5" >
 						    	<a href="memberCartList" style="color: #002b63;" class="text-success"><strong>
@@ -119,12 +119,12 @@
 			               	</div>
 			             
 		                  <div class="list-inline-item me-5">
-								<a href="memberMyPage?m_num=${member.m_num }" style="color: #002b63;" class="text-success"><strong>
+								<a href="memberMyPage?m_num=${emp.e_code }" style="color: #002b63;" class="text-success"><strong>
 								<i class="bi bi-person-circle"></i>
 								마이페이지</strong></a>
 			               	</div>
 			               	
-			             <c:if test="${member.m_admin == 1 }">
+			             <c:if test="${emp.e_admin == 1 }">
 			               		 <div class="list-inline-item me-5">
 									<a href="mainBo" style="color: #581313;"><strong>
 				               		<i class="bi bi-universal-access-circle" ></i>
@@ -168,9 +168,9 @@
 				
                 <div class="list-inline me-4">
 	               
-                 <!-- 회원가입 아이콘 -->
+               <%--   <!-- 회원가입 아이콘 -->
                  	<!-- 비로그인시 -->
-                 <c:if test="${sessionScope.member == null }">	
+                 <c:if test="${sessionScope.emp == null }">	
 	                  <div class="list-inline-item">
 	                    <a href="#!" class="text-muted" data-bs-toggle="modal" data-bs-target="#userModal">
 	                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
@@ -182,16 +182,16 @@
 	                    </a>
 	                  </div>
                   </c:if>
-                  <c:if test="${sessionScope.member != null }">	
+                  <c:if test="${sessionScope.emp != null }">	
                   	 <div class="list-inline-item">
-	                    <a href="memberMyPage?m_num=${member.m_num }" class="text-muted" >
-	                      <img alt="" src="${member.m_image }" width="20px" height="20px" class="rounded-circle">
+	                    <a href="memberMyPage?m_num=${emp.m_num }" class="text-muted" >
+	                      <img alt="" src="${emp.m_image }" width="20px" height="20px" class="rounded-circle">
 	                    </a>
 	                  </div>
-                  </c:if>
+                  </c:if> --%>
                   
             <!--  장바구니 아이콘 -->      
-                  <div class="list-inline-item">
+                 <%--  <div class="list-inline-item">
 
                     <a class="text-muted position-relative " data-bs-toggle="" data-bs-target=""
                       href="memberCartList" role="button" aria-controls="offcanvasRight">
@@ -212,7 +212,7 @@
                     
                     
                     </a>
-                  </div>
+                  </div> --%>
 
                 </div>
                 
@@ -239,13 +239,13 @@
                 
                 
               <!-- 메뉴 버튼 -->  
-                <button class="navbar-toggler collapsed" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbar-default" aria-controls="navbar-default" aria-label="Toggle navigation">
+                <!-- <button class="navbar-toggler collapsed" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbar-default" aria-controls="navbar-default" aria-label="Toggle navigation">
                   <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
                     class="bi bi-text-indent-left text-primary" viewBox="0 0 16 16">
                     <path
                       d="M2 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm.646 2.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L4.293 8 2.646 6.354a.5.5 0 0 1 0-.708zM7 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z" />
                   </svg>
-                </button>
+                </button> -->
               
               
               </div>

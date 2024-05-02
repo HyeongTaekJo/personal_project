@@ -2,6 +2,8 @@ package com.oracle.personal_project.Dao;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LoginDaoImpl implements LoginDao {
 	private final SqlSession session;
+	private final HttpSession https; 
 
 	//로그인
 	@Override
@@ -62,6 +65,42 @@ public class LoginDaoImpl implements LoginDao {
 			System.out.println(e.getMessage());
 		}
 		return list;
+	}
+
+	@Override
+	public Emp login(Emp emp1) {
+		System.out.println("EmpDaoImpl login Start...");
+		Emp emp = null;
+		 
+		try {
+			emp = session.selectOne("ybUserLogin", emp1);
+			System.out.println("MemberDaoImpl login member1 -> " + emp.getE_id());
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		if(emp == null) {
+			return null;
+		} else {
+			return emp;			
+		}
+	}
+
+	@Override
+	public int signInsert(Emp emp) {
+		System.out.println("아이디 중복 검사 다오");
+		int result = 0;
+		try {
+			result = session.insert("signInsert", emp);
+			if(result != 0) {
+				return result;
+			}else {
+				return result;
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return result;
 	}
 
 //	@Override

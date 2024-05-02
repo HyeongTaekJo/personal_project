@@ -82,19 +82,20 @@
 		
 
 	
-	function loginChk(m_id, m_pw) {		
+	function loginChk(e_id, e_pw) {		
 	
 		//alert("loginChk");
 		$.ajax({
 					url:"<%=request.getContextPath()%>/empChk",
-					data : {chk_Id : m_id, 
-							chk_Pw : m_pw},
+					data : {chk_Id : e_id, 
+							chk_Pw : e_pw},
 					dataType : 'text',
 					success : function(strResult) {
 						//alert('strResult -> '+strResult);
 						if(strResult == "1"){
 // 							alert("로그인 성공! 환영합니다.");
-							location.href = "mainBo";		
+							//location.href = "mainBo";		
+							location.href = "login?e_id=" + e_id + "&e_pw=" + e_pw;		
 							return true;
 						} else if(strResult == "2") {
 							alert("탈퇴한 회원입니다.");
@@ -161,7 +162,7 @@
                   </label>
                   
                 </div>
-                <div> 계정을 잊어버리셨나요? <a href="memberFindAccount">계정 찾기</a></div>
+               <!--  <div> 계정을 잊어버리셨나요? <a href="memberFindAccount">계정 찾기</a></div> -->
               </div>
 
              

@@ -4,6 +4,10 @@
 
 <mapper namespace="com.oracle.personal_project.ProductMapper">
 
+	<resultMap id="TotalOrderVO" type="TotalOrder">
+		<result property = "order_cnt" column="cnt1" />
+	</resultMap>
+
 	<select id="productCnt" parameterType="Product" resultType="int">
 		SELECT
 		         COUNT(*)
@@ -118,5 +122,73 @@
 		</foreach>
 	</select>
 
+	<select id="monthTotalOrderPrice" parameterType="String" resultType="int">
+	    SELECT SUM(C.p_cost) AS total_cost
+	    FROM work_order A
+	    LEFT OUTER JOIN plan_order B ON A.plan_code = B.plan_code
+	    LEFT OUTER JOIN product C ON B.p_code = C.p_code
+	    WHERE A.wo_date BETWEEN TO_DATE(#{dateString}, 'YYYY-MM') AND LAST_DAY(TO_DATE(#{dateString}, 'YYYY-MM'))
+	</select>
+	
+	<select id="lastMonthTotalOrderPrice" parameterType="String" resultType="int">
+	    SELECT SUM(C.p_cost) AS total_cost
+	    FROM work_order A
+	    LEFT OUTER JOIN plan_order B ON A.plan_code = B.plan_code
+	    LEFT OUTER JOIN product C ON B.p_code = C.p_code
+	    WHERE A.wo_date BETWEEN TO_DATE(#{lastDateString2}, 'YYYY-MM') AND LAST_DAY(TO_DATE(#{lastDateString2}, 'YYYY-MM'))
+	</select>
+	
+	<select id="monthTotalIncomePrice" parameterType="String" resultType="int">
+	    SELECT SUM(d.p_cost) AS total_cost
+		FROM performance A
+		LEFT OUTER JOIN work_order B ON A.wo_code = B.wo_code
+		LEFT OUTER JOIN plan_order C ON B.plan_code = C.plan_code
+		LEFT OUTER JOIN product D ON C.p_code = D.p_code
+	    WHERE A.pm_date BETWEEN TO_DATE(#{dateString}, 'YYYY-MM') AND LAST_DAY(TO_DATE(#{dateString}, 'YYYY-MM'))
+	</select>
+	
+	<select id="lastMonthTotalIncomePrice" parameterType="String" resultType="int">
+	    SELECT SUM(d.p_cost) AS total_cost
+		FROM performance A
+		LEFT OUTER JOIN work_order B ON A.wo_code = B.wo_code
+		LEFT OUTER JOIN plan_order C ON B.plan_code = C.plan_code
+		LEFT OUTER JOIN product D ON C.p_code = D.p_code
+	    WHERE A.pm_date BETWEEN TO_DATE(#{lastDateString2}, 'YYYY-MM') AND LAST_DAY(TO_DATE(#{lastDateString2}, 'YYYY-MM'))
+	</select>
+	
+	<select id="monthTotalDefectPrice" parameterType="String" resultType="int">
+	   SELECT SUM(d.p_cost) AS total_cost
+		FROM defect A
+		LEFT OUTER JOIN work_order B ON A.wo_code = B.wo_code
+		LEFT OUTER JOIN plan_order C ON B.plan_code = C.plan_code
+		LEFT OUTER JOIN product D ON C.p_code = D.p_code
+	    WHERE A.fail_date BETWEEN TO_DATE(#{dateString}, 'YYYY-MM') AND LAST_DAY(TO_DATE(#{dateString}, 'YYYY-MM'))
+	</select>
+	
+	<select id="lastMonthTotalDefectPrice" parameterType="String" resultType="int">
+	    SELECT SUM(d.p_cost) AS total_cost
+		FROM defect A
+		LEFT OUTER JOIN work_order B ON A.wo_code = B.wo_code
+		LEFT OUTER JOIN plan_order C ON B.plan_code = C.plan_code
+		LEFT OUTER JOIN product D ON C.p_code = D.p_code
+	    WHERE A.fail_date BETWEEN TO_DATE(#{lastDateString2}, 'YYYY-MM') AND LAST_DAY(TO_DATE(#{lastDateString2}, 'YYYY-MM'))
+	</select>
+	
+	<select id="gbSelectYearOrderCnt" statementType="CALLABLE" parameterType="java.util.Map">
+		call cur_mon_order_cnt(
+			#{order_cnt_list, mode=OUT, jdbcType=CURSOR, 
+						 javaType  = java.sql.ResultSet, 
+						 resultMap = TotalOrderVO}
+		)
+	</select>
+	
+	<select id="gbSelectYearReturnCnt" statementType="CALLABLE" parameterType="java.util.Map">
+		call cur_mon_return_cnt(
+			#{order_return_list, mode=OUT, jdbcType=CURSOR, 
+						 javaType  = java.sql.ResultSet, 
+						 resultMap = TotalOrderVO}
+		)
+	</select>
 
+	
 </mapper>

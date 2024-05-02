@@ -4,15 +4,15 @@ server:
 #Oracle Connect
 spring:
   datasource:
-#    driver-class-name: oracle.jdbc.OracleDriver
-#    url: jdbc:oracle:thin:@teamproject_high?TNS_ADMIN=/Users/jht56/OracleCloud/Wallet_TeamProject
-#    username: admin
-#    password: Rpdla56275627@
+    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@JOE4VKINFCCPAYV3_high?TNS_ADMIN=/Users/jht56/OracleCloud/Wallet_JOE4VKINFCCPAYV3
+    username: admin
+    password: Rpdla56275627@
     
-     driver-class-name: oracle.jdbc.driver.OracleDriver
-     url: jdbc:oracle:thin:@localhost:1521/xe
-     username: personal_project
-     password: tiger
+#     driver-class-name: oracle.jdbc.driver.OracleDriver
+#     url: jdbc:oracle:thin:@localhost:1521/xe
+#     username: personal_project
+#     password: tiger
   
   #File Size
   servlet:

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.personal_project.WorkOrderMapper">
+
+	<select id="workOrderCnt" parameterType="WorkOrder" resultType="int">
+		SELECT
+		         COUNT(*)
+		        
+	    FROM 	work_order
+	    
+	    WHERE
+	        1=1
+            <if test="date_from != '' and date_to == ''">
+                AND wo_date &gt;= #{date_from}
+            </if>
+            <if test="date_from == '' and date_to != ''">
+                AND wo_date &lt;= #{date_to}
+            </if>
+            <if test="date_from != '' and date_to != ''">
+                AND wo_date BETWEEN #{date_from} AND #{date_to}
+            </if>
+            <if test="wo_code != null and wo_code != ''">
+                AND wo_code LIKE '%' || #{wo_code} || '%'
+            </if>
+	        <if test="plan_code != null and plan_code != ''">
+	            AND plan_code LIKE '%' || #{plan_code} || '%'
+	        </if>
+	        <if test="mc_code != null and mc_code != ''">
+	            AND mc_code LIKE '%' || #{mc_code} || '%'
+	        </if>
+	        <if test="wc_code != null and wc_code != ''">
+	            AND wc_code LIKE '%' || #{wc_code} || '%'
+	        </if>
+	        <if test="wo_status != null and wo_status != ''">
+	            AND wo_status LIKE '%' || #{wo_status} || '%'
+	        </if>
+	</select>
+		
+	<select id="workOrderList" parameterType="WorkOrder" resultType="WorkOrder">
+		SELECT *
+		FROM(
+		    SELECT rownum rn, b.*
+		    FROM (
+		        SELECT   
+					 A.wo_code AS wo_code,
+					 A.plan_code AS plan_code,
+		             A.mc_code AS mc_code,
+		             B.mc_name AS mc_name,
+		             A.wc_code AS wc_code,
+		             C.wc_name AS wc_name,
+		             A.wo_status AS wo_status,
+		             A.wo_date AS wo_date,
+		             E.qty AS plan_qty,
+		             A.qty AS qty,
+		             D.s_name AS s_name
+		             
+	        FROM work_order A
+	        LEFT OUTER JOIN machine B ON A.mc_code = B.mc_code
+	        LEFT OUTER JOIN work_center C ON A.wc_code = C.wc_code
+	        LEFT OUTER JOIN small_code D ON A.wo_status = D.s_code
+	        LEFT OUTER JOIN plan_order E ON A.plan_code = E.plan_code
+		    
+		    WHERE
+		       1=1
+		      	<if test="date_from != '' and date_to == ''">
+	                AND A.wo_date &gt;= #{date_from}
+	            </if>
+	            <if test="date_from == '' and date_to != ''">
+	                AND A.wo_date &lt;= #{date_to}
+	            </if>
+	            <if test="date_from != '' and date_to != ''">
+	                AND A.wo_date BETWEEN #{date_from} AND #{date_to}
+	            </if>
+	            <if test="wo_code != null and wo_code != ''">
+	                AND A.wo_code LIKE '%' || #{wo_code} || '%'
+	            </if>
+		        <if test="plan_code != null and plan_code != ''">
+		            AND A.plan_code LIKE '%' || #{plan_code} || '%'
+		        </if>
+		        <if test="mc_code != null and mc_code != ''">
+		            AND A.mc_code LIKE '%' || #{mc_code} || '%'
+		        </if>
+		        <if test="wc_code != null and wc_code != ''">
+		            AND A.wc_code LIKE '%' || #{wc_code} || '%'
+		        </if>
+		        <if test="wo_status != null and wo_status != ''">
+		            AND A.wo_status LIKE '%' || #{wo_status} || '%'
+		        </if>
+		        AND D.b_code = 60
+		      ORDER BY A.wo_code ASC  
+		    ) b
+		)
+	    WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+
+	<select id="MachineList" resultType="Machine">
+		select * from machine
+	</select>
+	
+	<select id="WorkCenterList" resultType="WorkCenter">
+		select * from work_center
+	</select>
+	
+	<select id="workStatusList" resultType="Small_code">
+		select s_code as wo_status, s_name  from small_code where b_code = 60
+	</select>
+	
+	<insert id="newWorkOrderInsert" parameterType="java.util.List">    
+	    insert into work_order(wo_code, plan_code, mc_code, wc_code, wo_status, wo_date, ins_emp, ins_date, up_emp, up_date, qty)
+		select WORKORDER_CODE_SEQ.nextval, A.* from(
+		 <foreach item="workOrderList" collection="list" separator="UNION ALL " >
+		   select #{workOrderList.plan_code} as plan_code,
+		   		  #{workOrderList.mc_code} as mc_code,
+		          #{workOrderList.wc_code} as wc_code,
+		          #{workOrderList.wo_status} as wo_status,
+		          #{workOrderList.wo_date} as wo_date,
+		          10001 as ins_emp,
+		          SYSDATE as ins_date,
+		           10001 as up_emp,
+		          SYSDATE as up_date,
+		          #{workOrderList.qty} as qty
+		   from dual
+ 	</foreach>) A
+	</insert>
+	
+	<delete id="deleteWorkOrder" parameterType="String">
+		DELETE FROM work_order WHERE wo_code = #{wo_code}
+	</delete>
+	
+	
+	<select id="findPerformance" resultType="String">
+		select * from performance where wo_code = #{wo_code}
+	</select>
+	
+	
+	
+</mapper>

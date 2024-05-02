@@ -15,4 +15,5 @@ public class Emp {	//회원
 	private int e_admin; // 관리자여부
 	private int e_wd;    // 탈퇴여부
 	private String e_image; // 회원이미지
+	private String chk;
 }

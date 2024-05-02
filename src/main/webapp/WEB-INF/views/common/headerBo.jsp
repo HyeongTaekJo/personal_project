@@ -51,13 +51,46 @@
 </head>
 
 <body>
+
+
 	<!-- main -->
 	<div>
 		<nav class="navbar navbar-expand-lg navbar-glass">
 			<div class="container-fluid">
 				<div class="d-flex justify-content-between align-items-center w-100">
+				
+					<!-- 우측 최상단 구성 -->
+					<div class="text-start d-none d-md-block">
+					    <c:if test="${sessionScope.emp == null }">
+					        <div class="list-inline-item me-6">
+					            <!-- 로그인 아이콘 -->
+					            <a href="loginForm" class="position-relative text-success">                  
+					                <strong><i class="feather-icon icon-log-out me-1"></i>로그인</strong>
+					                <span class="visually-hidden">unread messages</span>
+					            </a>
+					        </div>
+					        <div class="list-inline-item me-6">
+					            <!-- 회원가입 아이콘 -->
+					            <a href="signUp" class="text-success">                  
+					                <strong><i class="bi bi-person-plus-fill me-1"></i>회원가입</strong>
+					                <span class="visually-hidden">unread messages</span>
+					            </a>
+					        </div>
+					    </c:if> 
+					    <!-- 로그인 시 -->
+					    <c:if test="${sessionScope.emp != null }">
+					        <div class="list-inline-item me-5">
+					            <!-- 로그아웃 아이콘 -->
+					            <a href="memberLogout"  style="color: #002b63;" class="text-success"><strong>
+					                <i class="feather-icon icon-log-out me-1"></i>로그아웃
+					                <span class="visually-hidden">unread mes</span></strong>
+					            </a>
+					        </div>
+					    </c:if>  
+					</div>
+				
+				
 					<div class="d-flex align-items-center">
-
 						<a class="text-inherit d-block d-xl-none me-4"
 							data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
 							aria-controls="offcanvasExample"> <svg
@@ -69,14 +102,16 @@
                   </svg>
 						</a>
 
-				
+				<!-- 
                 	<a href="/" style="float: right;">
 					  <div>
 					    <i class="bi bi-universal-access-circle me-1"></i>
 					    POP페이지 전환
 					  </div>
 					</a>
+					 -->
                 	
+                
                 
 					</div>
 					<div>
@@ -93,7 +128,7 @@
 		<nav class="navbar-vertical-nav d-none d-xl-block ">
 			<div class="navbar-vertical">
 				<div class="px-4 py-5">
-					<a href="mainBo" class="navbar-brand">
+					<a href="/" class="navbar-brand">
 						<h3>
 						<img alt="" src="../assets/images/favicon/JOYFACTORY.png" width="50px" style="width: 200px; margin-right: 10px;">
 						</h3>
@@ -102,10 +137,11 @@
 				<div class="navbar-vertical-content flex-grow-1" data-simplebar="">
 					<ul class="navbar-nav flex-column" id="sideNavbar">
 
-						<li class="nav-item "><a class="nav-link  active " href="mainBo">
+						<li class="nav-item "><a class="nav-link  active " href="/">
 								<div class="d-flex align-items-center">
 									<span class="nav-link-icon"> <i class="bi bi-house"></i></span>
 									<span class="nav-link-text">MAIN</span>
+									
 								</div>
 						</a></li>
 						<li class="nav-item mt-6 mb-3"><span class="nav-label">관리자 메뉴</span></li>
@@ -166,9 +202,9 @@
 									<li class="nav-item "><a class="nav-link "
 										href="planOrderList"> 생산계획 등록 </a></li>
 									<li class="nav-item "><a class="nav-link "
-										href=""> 작업지시 등록 </a></li>
+										href="workOrderList"> 작업지시 등록 </a></li>
 									<li class="nav-item "><a class="nav-link "
-										href=""> 실적 조회 </a></li>
+										href="performanceList"> 실적 조회 </a></li>
 								</ul>
 							</div></li>
 
@@ -185,7 +221,7 @@
 								data-bs-parent="#sideNavbar">
 								<ul class="nav flex-column">
 									<li class="nav-item "><a class="nav-link "
-										href=""> 불량품 조회 </a></li>
+										href="defectList"> 불량품 조회 </a></li>
 									
 								</ul>
 							</div></li>
@@ -274,9 +310,9 @@
 									<li class="nav-item "><a class="nav-link "
 										href="planOrderList"> 생산계획 등록 </a></li>
 									<li class="nav-item "><a class="nav-link "
-										href=""> 작업지시 등록 </a></li>
+										href="workOrderList"> 작업지시 등록 </a></li>
 									<li class="nav-item "><a class="nav-link "
-										href=""> 실적 조회 </a></li>
+										href="performanceList"> 실적 조회 </a></li>
 								</ul>
 							</div></li>
 
@@ -293,7 +329,7 @@
 								data-bs-parent="#sideNavbar">
 								<ul class="nav flex-column">
 									<li class="nav-item "><a class="nav-link "
-										href=""> 불량품 조회 </a></li>
+										href="defectList"> 불량품 조회 </a></li>
 									
 								</ul>
 							</div></li>

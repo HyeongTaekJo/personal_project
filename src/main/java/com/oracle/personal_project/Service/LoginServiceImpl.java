@@ -38,4 +38,20 @@ public class LoginServiceImpl implements LoginService {
 		return list;
 	}
 
+	//로그인 검사
+	@Override
+	public Emp login(Emp emp1) {
+		System.out.println("login Start");
+		emp1 = ld.login(emp1);
+		
+		return emp1;
+	}
+
+	@Override
+	public int signInsert(Emp emp) {
+		System.out.println("아이디 중복검사 시작");
+		int result = ld.signInsert(emp);
+		return result;
+	}
+
 }

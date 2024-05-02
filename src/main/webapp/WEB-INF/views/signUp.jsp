@@ -52,6 +52,9 @@
         if (!isDuplicateChecked) {
             event.preventDefault(); // 폼 제출을 막음
             alert("중복 확인을 먼저 진행해주세요.");
+        } else{
+        	alert("회원가입을 축하합니다.");
+        	alert("로그인을 해주십시오.");
         }
     }
 
@@ -67,7 +70,7 @@
        
     </div>
     <!-- form -->
-    <form class="row" onsubmit="onSubmitForm(event);" action="mainBo">
+    <form class="row" onsubmit="onSubmitForm(event);" action="/signInsert">
        <!-- input -->
        <div class="col-md-7 mb-3">
           <label class="form-label" for="name"> 이름<span class="text-danger">*</span></label>

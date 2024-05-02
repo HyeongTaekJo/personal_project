@@ -13,5 +13,9 @@ public interface LoginDao {
 
 	List<Dept> deptList();
 
+	Emp login(Emp emp1);
+
+	int signInsert(Emp emp);
+
 	
 }

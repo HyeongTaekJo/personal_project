@@ -14,6 +14,12 @@
 		<typeAlias alias="Customer" 		type="com.oracle.personal_project.model.Customer"/>
 		<typeAlias alias="Ship" 		type="com.oracle.personal_project.model.Ship"/>
 		<typeAlias alias="PlanOrder" 		type="com.oracle.personal_project.model.Plan_order"/>
+		<typeAlias alias="WorkOrder" 		type="com.oracle.personal_project.model.Work_order"/>
+		<typeAlias alias="Machine" 		type="com.oracle.personal_project.model.Machine"/>
+		<typeAlias alias="WorkCenter" 		type="com.oracle.personal_project.model.Work_center"/>
+		<typeAlias alias="Performance" 		type="com.oracle.personal_project.model.Performance"/>
+		<typeAlias alias="Defect" 		type="com.oracle.personal_project.model.Defect"/>
+		<typeAlias alias="TotalOrder" 		type="com.oracle.personal_project.model.TotalOrder"/>
 		
 	</typeAliases>
 </configuration>

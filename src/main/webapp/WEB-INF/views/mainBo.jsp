@@ -22,6 +22,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+
 		
 		 <div class="row ">
  
@@ -30,32 +31,32 @@
                             <div class="card h-100 card-lg">
                                 <!-- card body -->
                                 <div class="card-body p-6">
-                                    <h3 class="mb-2 fs-5">회원 분석 </h3>
-                                    <h4 class="mb-0 fs-6">총 회원 : ${totalMember } 명</h4>
+                                    <h3 class="mb-2 fs-5">불량 분석 </h3>
+                                    <h4 class="mb-0 fs-6">총 불량수 : ${totalDefect } 명</h4>
                                     <div class="mt-6">
                                         <!-- text -->
                                         <div class="mb-5">
                                             <div class="d-flex align-items-center justify-content-between">
-                                                <h5 class="fs-6">일반 회원</h5>
-                                                <span><span class="me-1 text-dark">${nomalMember } 명</span>
-                                                ( <fmt:formatNumber value="${averNomalMember }" maxFractionDigits="0"/> % )</span>
+                                                <h5 class="fs-6">${firstDefect.s_name }</h5>
+                                                <span><span class="me-1 text-dark">${firstDefect.total_count } 개</span>
+                                                ( <fmt:formatNumber value="${averFirstDefect }" maxFractionDigits="0"/> % )</span>
                                             </div>
                                             <!-- main wrapper -->
                                             <div>
                                                 <!-- progressbar -->
                                                 <div class="progress bg-light-primary" style="height: 6px;">
                                                     <div class="progress-bar bg-primary" role="progressbar"
-                                                        aria-label="Example 1px high" style="width: ${averNomalMember}%;"
-                                                        aria-valuenow="${averNomalMember}" aria-valuemin="0" aria-valuemax="${totalMember }"></div>
+                                                        aria-label="Example 1px high" style="width: ${averFirstDefect}%;"
+                                                        aria-valuenow="${averFirstDefect}" aria-valuemin="0" aria-valuemax="${totalDefect }"></div>
                                                 </div>
                                             </div>
                                         </div>
                                         
                                             <div class="mb-5">
                                             <div class="d-flex align-items-center justify-content-between">
-                                                <h5 class="fs-6">관리자</h5>
-                                                <span><span class="me-1 text-dark">${adminMember } 명</span>
-                                                ( <fmt:formatNumber value="${averAdminMember }" maxFractionDigits="0"/> % )</span>
+                                                <h5 class="fs-6">${secondDefect.s_name }</h5>
+                                                <span><span class="me-1 text-dark">${secondDefect.total_count } 개</span>
+                                                ( <fmt:formatNumber value="${averSecondDefect }" maxFractionDigits="0"/> % )</span>
                                             </div>
                                             <!-- main wrapper -->
                                             <div>
@@ -63,8 +64,8 @@
                                                 <div class="progress bg-info-soft" style="height: 6px;">
                                                     <div class="progress-bar bg-warning" role="progressbar"
 
-                                                        aria-label="Example 1px high" style="width: ${averAdminMember}%;"
-                                                        aria-valuenow="${averAdminMember }" aria-valuemin="0" aria-valuemax="${totalMember }"></div>
+                                                        aria-label="Example 1px high" style="width: ${averSecondDefect}%;"
+                                                        aria-valuenow="${averSecondDefect }" aria-valuemin="0" aria-valuemax="${totalDefect }"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -72,39 +73,39 @@
                                         <div class="mb-5">
                                             <!-- text -->
                                             <div class="d-flex align-items-center justify-content-between">
-                                                <h5 class="fs-6">활동 회원</h5>
-                                                <span><span class="me-1 text-dark">${activeMember } 명</span>
-                                               ( <fmt:formatNumber value="${averActiveMember }" maxFractionDigits="0"/> % )</span>
+                                                <h5 class="fs-6">${thirdDefect.s_name }</h5>
+                                                <span><span class="me-1 text-dark">${thirdDefect.total_count } 개</span>
+                                               ( <fmt:formatNumber value="${averThirdDefect }" maxFractionDigits="0"/> % )</span>
                                             </div>
                                             <div>
                                                 <!-- progressbar -->
                                                 <div class="progress bg-info-soft" style="height: 6px;">
                                                     <div class="progress-bar bg-info" role="progressbar"
-                                                        aria-label="Example 1px high" style="width: ${averActiveMember}%;"
-                                                        aria-valuenow="${averActiveMember }" aria-valuemin="0" aria-valuemax="${totalMember }"></div>
+                                                        aria-label="Example 1px high" style="width: ${averThirdDefect}%;"
+                                                        aria-valuenow="${averThirdDefect }" aria-valuemin="0" aria-valuemax="${totalDefect }"></div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div>
                                             <!-- text -->
                                             <div class="d-flex align-items-center justify-content-between">
-                                                <h5 class="fs-6">탈퇴 회원</h5>
-                                                <span><span class="me-1 text-dark">${wdMember } 명</span>
-                                                 ( <fmt:formatNumber value="${averWdMember }" maxFractionDigits="0"/> % )</span>
+                                                <h5 class="fs-6">${forthDefect.s_name }</h5>
+                                                <span><span class="me-1 text-dark">${forthDefect.total_count } 명</span>
+                                                 ( <fmt:formatNumber value="${averForthDefect }" maxFractionDigits="0"/> % )</span>
                                             </div>
                                             <div>
                                                 <!-- progressbar -->
                                                 <div class="progress bg-light-danger" style="height: 6px;">
                                                     <div class="progress-bar bg-danger" role="progressbar"
-                                                        aria-label="Example 1px high" style="width: ${averWdMember}%;"
-                                                        aria-valuenow="${averWdMember }" aria-valuemin="0" aria-valuemax="${totalMember }"></div>
+                                                        aria-label="Example 1px high" style="width: ${averForthDefect}%;"
+                                                        aria-valuenow="${averForthDefect }" aria-valuemin="0" aria-valuemax="${totalDefect }"></div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
 									
 									
-									<div style="display: flex; align-items: center;">
+									<%-- <div style="display: flex; align-items: center;">
 										<div class="list-inline">
 							              <div class="list-inline-item me-5">
 							
@@ -118,7 +119,7 @@
 							                </a>
 							                </div>
 						                </div>
-									</div>
+									</div> --%>
 									
                                 </div>
                             </div>
@@ -131,7 +132,7 @@
                                 <!-- card body -->
                                 <div class="card-body p-6">
                                     <!-- heading -->
-                                    <h3 class="mb-0 fs-5">Member Chart </h3>
+                                    <h3 class="mb-0 fs-5">불량 차트  </h3>
                                     <div class="mt-4 d-flex justify-content-center">
 										
 										<div class="chart1">
@@ -143,9 +144,10 @@
 
 												// 차트 데이터 
 												var data = {
-												  labels: ['일반 회원','활동회원','관리자', '탈퇴회원' ],
+												  labels: ['1위 ' + '${firstDefect.s_name }','2위 ' + '${secondDefect.s_name }',
+													  '3위 ' + '${thirdDefect.s_name }', '4위 ' + '${forthDefect.s_name }' ],
 												  datasets: [{
-												    data: [${nomalMember },${activeMember },${adminMember }, ${wdMember }],
+												    data: [${firstDefect.total_count },${secondDefect.total_count },${thirdDefect.total_count }, ${forthDefect.total_count }],
 												    backgroundColor: [
 												      '#0aad0a',
 												      '#016bf8',
@@ -160,14 +162,15 @@
 												  type: 'pie',
 												  data: data
 												});
-												</script>
+											   </script>
 	                                    </div>
 	                                </div>
 	                            </div>
 	                        </div>
 				           
 				           <!-- 주문 총계 -->
-						  	<div class="row">
+						  	<div class="row"> 
+							<h3 class="mb-2 fs-5"> 월간 생산 진행현황</h3>
 						       <div class="col-lg-4 col-12 mb-6">
 						           <!-- 한달 총 수입 -->
 						           <div class="card h-100 card-lg">
@@ -176,30 +179,30 @@
 						                   <!-- heading -->
 						                   <div class="d-flex justify-content-between align-items-center mb-6">
 						                       <div>
-						                           <h4 class="mb-0 fs-5" _msttexthash="9833616" _msthash="87">${month }월 총수입</h4>
+						                           <h4 class="mb-0 fs-5" _msttexthash="9833616" _msthash="87">${month}월 총 발주금액</h4>
 						                       </div>
 						                       <div class="icon-shape icon-md bg-light-danger text-dark-danger rounded-circle">
-						                           <i class="bi bi-currency-dollar fs-5"></i>
+						                           <i class="bi bi-boxes"></i>
 						                       </div>
 						                   </div>
 						                   <!-- 한달 총 수입 금액 -->
 						                   <div class="lh-1">
 						                       <h1 class=" mb-2 fw-bold fs-2" _msttexthash="76492" _msthash="88">
-						                       	<fmt:formatNumber value="${totalIncome }" groupingUsed="true"/>원
+						                       	<fmt:formatNumber value="${monthTotalOrderPrice}" groupingUsed="true"/>원
 						                       </h1>
-						                       <c:if test="${totalIncome - lastTotalIncome > 0}">
+						                       <c:if test="${monthTotalOrderPrice - lastMonthTotalOrderPrice > 0}">
 							                       <span _msttexthash="21663070" _msthash="89">
 							                       	지난달과 비교 : 
 							                       	<span class="me-1" _istranslated="1" style="color:red">
-							                       		+<fmt:formatNumber value="${totalIncome - lastTotalIncome }" groupingUsed="true"/>원
+							                       		+<fmt:formatNumber value="${monthTotalOrderPrice - lastMonthTotalOrderPrice}" groupingUsed="true"/>원
 							                       	</span>
 							                       </span>
 						                       </c:if>
-						                       <c:if test="${totalIncome - lastTotalIncome < 0}">
+						                       <c:if test="${monthTotalOrderPrice - lastMonthTotalOrderPrice < 0}">
 							                       <span _msttexthash="21663070" _msthash="89">
 							                       	지난달과 비교 : 
 							                       	<span class="me-1" _istranslated="1" style="color:blue">
-							                       		<fmt:formatNumber value="${totalIncome - lastTotalIncome }" groupingUsed="true"/>원
+							                       		<fmt:formatNumber value="${monthTotalOrderPrice - lastMonthTotalOrderPrice}" groupingUsed="true"/>원
 							                       	</span>
 							                       </span>
 						                       </c:if>
@@ -215,7 +218,7 @@
 						                   <!-- heading -->
 						                   <div class="d-flex justify-content-between align-items-center mb-6">
 						                       <div>
-						                           <h4 class="mb-0 fs-5" _msttexthash="9666644" _msthash="90">${month }월 주문건수</h4>
+						                           <h4 class="mb-0 fs-5" _msttexthash="9666644" _msthash="90">${month}월 입고금액</h4>
 						                       </div>
 						                       <div class="icon-shape icon-md bg-light-warning text-dark-warning rounded-circle">
 						                           <i class="bi bi-cart fs-5"></i>
@@ -224,21 +227,21 @@
 						                   <!-- project number -->
 						                   <div class="lh-1">
 						                       <h1 class=" mb-2 fw-bold fs-2" _msttexthash="37895" _msthash="91">
-						                       	<fmt:formatNumber value="${monthTotalCnt }" groupingUsed="true"/>건
+						                       	<fmt:formatNumber value="${monthTotalIncomePrice}" groupingUsed="true"/>원
 						                       </h1>
-						                       <c:if test="${monthTotalCnt - lastTotalCnt > 0 }">
+						                       <c:if test="${monthTotalIncomePrice - lastMonthTotalIncomePrice > 0}">
 							                       <span _msttexthash="48127183" _msthash="92">
 							                       	지난달과 비교 : 
 							                       	 <span class="me-1" _istranslated="1" style="color:red">
-							                         	+<fmt:formatNumber value="${monthTotalCnt - lastTotalCnt }" groupingUsed="true"/>건
+							                         	+<fmt:formatNumber value="${monthTotalIncomePrice - lastMonthTotalIncomePrice}" groupingUsed="true"/>원
 							                         </span>
 							                       </span>
 						                       </c:if>
-						                       <c:if test="${monthTotalCnt - lastTotalCnt < 0 }">
+						                       <c:if test="${monthTotalIncomePrice - lastMonthTotalIncomePrice < 0 }">
 							                       <span _msttexthash="48127183" _msthash="92">
 							                       	지난달과 비교 : 
 							                       	 <span class="me-1" _istranslated="1" style="color:blue">
-							                         	<fmt:formatNumber value="${monthTotalCnt - lastTotalCnt }" groupingUsed="true"/>건
+							                         	<fmt:formatNumber value="${monthTotalIncomePrice - lastMonthTotalIncomePrice}" groupingUsed="true"/>원
 							                         </span>
 							                       </span>
 						                       </c:if>
@@ -254,7 +257,7 @@
 						                   <!-- heading -->
 						                   <div class="d-flex justify-content-between align-items-center mb-6">
 						                       <div>
-						                           <h4 class="mb-0 fs-5" _msttexthash="8609640" _msthash="93">${month }월 신규고객</h4>
+						                           <h4 class="mb-0 fs-5" _msttexthash="8609640" _msthash="93">${month}월 불량금액</h4>
 						                       </div>
 						                       <div class="icon-shape icon-md bg-light-info text-dark-info rounded-circle">
 						                           <i class="bi bi-people fs-5"></i>
@@ -263,21 +266,21 @@
 						                   <!-- project number -->
 						                   <div class="lh-1">
 						                       <h1 class=" mb-2 fw-bold fs-2" _msttexthash="38038" _msthash="94">
-						                       		<fmt:formatNumber value="${monthTotalNewMember }" groupingUsed="true"/>명
+						                       		<fmt:formatNumber value="${monthTotalDefectPrice}" groupingUsed="true"/>원
 						                       </h1>
-						                       <c:if test="${monthTotalNewMember - lastTotalNewMember > 0 }">
+						                       <c:if test="${monthTotalDefectPrice - lastMonthTotalDefectPrice > 0}">
 							                       <span _msttexthash="72624214" _msthash="95">
 							                       	지난달과 비교 : 
 							                       	<span class="me-1" _istranslated="1" style="color:red">
-							                       		+<fmt:formatNumber value="${monthTotalNewMember - lastTotalNewMember }" groupingUsed="true"/>명
+							                       		+<fmt:formatNumber value="${monthTotalDefectPrice - lastMonthTotalDefectPrice}" groupingUsed="true"/>원
 							                       	</span>
 							                       </span>
 						                       </c:if>
-						                       <c:if test="${monthTotalNewMember - lastTotalNewMember < 0 }">
+						                       <c:if test="${monthTotalDefectPrice - lastTotalNewMember < 0}">
 							                       <span _msttexthash="72624214" _msthash="95">
 							                       	지난달과 비교 : 
 							                       	<span class="me-1" _istranslated="1" style="color:blue">
-							                       		<fmt:formatNumber value="${monthTotalNewMember - lastTotalNewMember }" groupingUsed="true"/>명
+							                       		<fmt:formatNumber value="${monthTotalDefectPrice - lastMonthTotalDefectPrice}" groupingUsed="true"/>원
 							                       	</span>
 							                       </span>
 						                       </c:if>
@@ -292,7 +295,7 @@
 						       <div class="col-lg-12 col-12 mb-6">
 						  	<div class="card card-lg mb-6">
                                 <div class="card-body px-6 py-8">
-                                	<h3 class="mb-0 fs-5">Order Chart </h3>
+                                	<h3 class="mb-0 fs-5">양품/불량 건수 Chart</h3>
                                     <div class="d-flex align-items-center">
                                     	<div id="chart">
                                     		<canvas id="myOrderChart" width="1350vw" height="600vh"></canvas>
@@ -322,7 +325,7 @@
 	                                              labels: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
 	                                              datasets: [
 	                                            	{
-		                                                label: '2023 주문 건수 현황',
+		                                                label: '2024 양품 건수 현황',
 		                                                data: totalOrderList,
 		                                                fill: false,
 		                                                borderColor: '#EE204D',
@@ -330,7 +333,7 @@
 		                                                tension: 0.1
 	                                                },
 	                                                {
-	                                                	label: '2023 반품 건수 현황',
+	                                                	label: '2024 불량 건수 현황',
 		                                                data: totalReturnList,
 		                                                fill: false,
 		                                                borderColor: '#007AFF',

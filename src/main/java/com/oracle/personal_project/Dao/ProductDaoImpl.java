@@ -1,5 +1,8 @@
 package com.oracle.personal_project.Dao;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,11 +12,16 @@ import org.springframework.stereotype.Repository;
 
 import com.oracle.personal_project.model.Big_code;
 import com.oracle.personal_project.model.Customer;
+import com.oracle.personal_project.model.Defect;
 import com.oracle.personal_project.model.Emp;
+import com.oracle.personal_project.model.Machine;
+import com.oracle.personal_project.model.Performance;
 import com.oracle.personal_project.model.Plan_order;
 import com.oracle.personal_project.model.Product;
 import com.oracle.personal_project.model.Ship;
 import com.oracle.personal_project.model.Small_code;
+import com.oracle.personal_project.model.Work_center;
+import com.oracle.personal_project.model.Work_order;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +29,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProductDaoImpl implements ProductDao {
 	private final SqlSession session;
+	
+	
 
 	//제품수량
 	@Override
@@ -462,6 +472,392 @@ public class ProductDaoImpl implements ProductDao {
 			System.out.println("deletePlan deletePlan--> " + e.getMessage());
 		}
 		return result;
+	}
+
+	//지시 수량
+	@Override
+	public int workOrderCnt(Work_order workOrder) {
+		System.out.println("지시 수량");
+		int result = 0;
+		
+		try {
+			result = session.selectOne("workOrderCnt", workOrder);
+			System.out.println("result ==> " + result);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return result;
+	}
+
+	//지시 리스트
+	@Override
+	public List<Work_order> workOrderList(Work_order workOrder) {
+		System.out.println("지시 리스트  다오");
+		List<Work_order> list = null;
+		
+		try {
+			list = session.selectList("workOrderList", workOrder);
+			System.out.println("list ==> " + list);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return list;
+	}
+
+	//설비리스트
+	@Override
+	public List<Machine> MachineList() {
+		System.out.println("설비리스트  다오");
+		List<Machine> list = null;
+		
+		try {
+			list = session.selectList("MachineList");
+			System.out.println("list ==> " + list);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return list;
+	}
+
+	//작업장 리스트
+	@Override
+	public List<Work_center> WorkCenterList() {
+		System.out.println("작업장 리스트  다오");
+		List<Work_center> list = null;
+		
+		try {
+			list = session.selectList("WorkCenterList");
+			System.out.println("list ==> " + list);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return list;
+	}
+
+	//작업상태 리스트
+	@Override
+	public List<Small_code> workStatusList() {
+		System.out.println("작업장 리스트  다오");
+		List<Small_code> list = null;
+		
+		try {
+			list = session.selectList("workStatusList");
+			System.out.println("list ==> " + list);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return list;
+	}
+
+	//모달 생산계획 리스트
+	@Override
+	public List<Plan_order> planOrderListModal() {
+		System.out.println("모달 생산계획 리스트  다오");
+		List<Plan_order> list = null;
+		
+		try {
+			list = session.selectList("planOrderListModal");
+			System.out.println("list ==> " + list);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return list;
+	}
+
+	//신규 작업지시추가
+	@Override
+	public int newWorkOrderInsert(List<Work_order> workOrderList) {
+		System.out.println("신규작업지시추가  다오");
+		int result = 0;
+		try {
+			result = session.insert("newWorkOrderInsert", workOrderList);
+		}catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return result;
+	}
+
+	//작업지시 삭제
+	@Override
+	public int deleteWorkOrder(String wo_code) {
+		System.out.println("삭제  다오");
+		List<String> performanceList = null;
+		int result = 0;
+		try {
+			performanceList = session.selectList("findPerformance", wo_code);
+			System.out.println("performanceList--> " + performanceList);
+			if(!performanceList.isEmpty()) {
+				result = 2;
+				return result;
+			} else {
+				result = session.delete("deleteWorkOrder", wo_code);
+				System.out.println("deleteWorkOrder result--> " + result);
+			}
+			
+		}catch (Exception e) {
+			System.out.println("deleteWorkOrder--> " + e.getMessage());
+		}
+		return result;
+	}
+
+	//실적수량
+	@Override
+	public int performanceCnt(Performance performance) {
+		System.out.println("실적수량");
+		int result = 0;
+		
+		try {
+			result = session.selectOne("performanceCnt", performance);
+			System.out.println("result ==> " + result);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return result;
+	}
+
+	//실적 리스트
+	@Override
+	public List<Performance> performanceList(Performance performance) {
+		System.out.println("실적 리스트");
+		List<Performance> list = null;
+		
+		try {
+			list = session.selectList("performanceList", performance);
+			System.out.println("list ==> " + list);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return list;
+	}
+
+	//불량 수량
+	@Override
+	public int defectCnt(Defect defect) {
+		System.out.println("불량 수량");
+		int result = 0;
+		
+		try {
+			result = session.selectOne("defectCnt", defect);
+			System.out.println("result ==> " + result);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return result;
+	}
+
+	//불량 리스트
+	@Override
+	public List<Defect> defectList(Defect defect) {
+		System.out.println("불량 리스트");
+		List<Defect> list = null;
+		
+		try {
+			list = session.selectList("defectList", defect);
+			System.out.println("list ==> " + list);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return list;
+	}
+
+	
+    
+	//이번달 총 발주금액 구하기
+	@Override
+	public int monthTotalOrderPrice() {
+		System.out.println("이번달 총 발주금액 구하기");
+		int result = 0;
+		
+		// 현재 날짜
+	    LocalDate date = LocalDate.now();
+	    // 날짜를 "yyyy-MM" 형식의 문자열로 변환
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+	    String dateString = date.format(formatter);
+	    System.out.println("dateString ==> " + dateString);
+	    
+	    LocalDate previousMonth = date.minusMonths(1);
+	    String lastDateString = previousMonth.format(formatter);
+	    System.out.println("lastDateString ==> " + lastDateString);
+	    
+		try {
+			result = session.selectOne("monthTotalOrderPrice", dateString);
+			System.out.println("result ==> " + result);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return result;
+	}
+
+	
+	//저번달 총 발주금액 구하기
+	@Override
+	public int lastMonthTotalOrderPrice() {
+		System.out.println("저번달 총 발주금액 구하기");
+		int result = 0;
+		
+		// 현재 날짜
+	    LocalDate date = LocalDate.now();
+	    // 날짜를 "yyyy-MM" 형식의 문자열로 변환
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+	    String dateString = date.format(formatter);
+	    System.out.println("dateString ==> " + dateString);
+	    
+	    LocalDate previousMonth = date.minusMonths(1);
+	    String lastDateString2 = previousMonth.format(formatter);
+	    System.out.println("lastDateString2 ==> " + lastDateString2);
+        
+		try {
+			result = session.selectOne("lastMonthTotalOrderPrice", lastDateString2);
+			System.out.println("result ==> " + result);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return result;
+	}
+
+	//이번달 총 입고금액 구하기
+	@Override
+	public int monthTotalIncomePrice() {
+		System.out.println("이번달 총 입고금액 구하기");
+		int result = 0;
+		
+		// 현재 날짜
+	    LocalDate date = LocalDate.now();
+	    // 날짜를 "yyyy-MM" 형식의 문자열로 변환
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+	    String dateString = date.format(formatter);
+	    System.out.println("dateString ==> " + dateString);
+	    
+	    LocalDate previousMonth = date.minusMonths(1);
+	    String lastDateString = previousMonth.format(formatter);
+	    System.out.println("lastDateString ==> " + lastDateString);
+	    
+		try {
+			result = session.selectOne("monthTotalIncomePrice", dateString);
+			System.out.println("result ==> " + result);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return result;
+	}
+
+	//저번달 총 입고금액 구하기
+	@Override
+	public int lastMonthTotalIncomePrice() {
+		System.out.println("저번달 총 발주금액 구하기");
+		int result = 0;
+		
+		// 현재 날짜
+	    LocalDate date = LocalDate.now();
+	    // 날짜를 "yyyy-MM" 형식의 문자열로 변환
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+	    String dateString = date.format(formatter);
+	    System.out.println("dateString ==> " + dateString);
+	    
+	    LocalDate previousMonth = date.minusMonths(1);
+	    String lastDateString2 = previousMonth.format(formatter);
+	    System.out.println("lastDateString2 ==> " + lastDateString2);
+        
+		try {
+			result = session.selectOne("lastMonthTotalIncomePrice", lastDateString2);
+			System.out.println("result ==> " + result);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return result;
+	}
+
+	//이번달 총 불량금액 구하기
+	@Override
+	public int monthTotalDefectPrice() {
+		System.out.println("이번달 총 불량금액 구하기");
+		int result = 0;
+		
+		// 현재 날짜
+	    LocalDate date = LocalDate.now();
+	    // 날짜를 "yyyy-MM" 형식의 문자열로 변환
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+	    String dateString = date.format(formatter);
+	    System.out.println("dateString ==> " + dateString);
+	    
+	    LocalDate previousMonth = date.minusMonths(1);
+	    String lastDateString = previousMonth.format(formatter);
+	    System.out.println("lastDateString ==> " + lastDateString);
+	    
+		try {
+			result = session.selectOne("monthTotalDefectPrice", dateString);
+			System.out.println("result ==> " + result);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return result;
+	}
+
+	//저번달 총 불량금액 구하기
+	@Override
+	public int lastMonthTotalDefectPrice() {
+		System.out.println("저번달 총 불량금액 구하기");
+		int result = 0;
+		
+		// 현재 날짜
+	    LocalDate date = LocalDate.now();
+	    // 날짜를 "yyyy-MM" 형식의 문자열로 변환
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+	    String dateString = date.format(formatter);
+	    System.out.println("dateString ==> " + dateString);
+	    
+	    LocalDate previousMonth = date.minusMonths(1);
+	    String lastDateString2 = previousMonth.format(formatter);
+	    System.out.println("lastDateString2 ==> " + lastDateString2);
+        
+		try {
+			result = session.selectOne("lastMonthTotalDefectPrice", lastDateString2);
+			System.out.println("result ==> " + result);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return result;
+	}
+
+	@Override
+	public void selectYearOrderCnt(HashMap<String, Object> map) {
+		System.out.println("TotalOrderDao selectYearOrderCnt start...");
+		
+		try {
+			session.selectOne("gbSelectYearOrderCnt", map);
+		} catch (Exception e) {
+			System.out.println("TotalOrderDao selectYearOrderCnt Exception -> "+e.getMessage());
+		}
+		
+	}
+
+	@Override
+	public void selectYearReturnCnt(HashMap<String, Object> map) {
+		System.out.println("TotalOrderDao selectYearReturnCnt start...");
+		
+		try {
+			session.selectOne("gbSelectYearReturnCnt", map);
+			System.out.println("TotalOrderDao selectYearReturnCnt end...");
+		} catch (Exception e) {
+			System.out.println("TotalOrderDao selectYearReturnCnt Exception -> "+e.getMessage());
+		}
+		
 	}
 
 }

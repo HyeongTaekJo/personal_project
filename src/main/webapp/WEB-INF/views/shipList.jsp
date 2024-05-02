@@ -238,6 +238,7 @@
 	$(function() {
 	    $('#saveButton').click(function() {
 	        var shipList = []; // 제품 정보를 담을 배열 선언
+	        var isValid = true; // 유효성 검사를 위한 변수 추가
 	        
 	        // 테이블의 각 행을 순회하며 값을 가져와서 배열에 추가
 	        $('#list tbody tr').each(function() {
@@ -251,9 +252,25 @@
 	                    ship_deli: $(this).find('td:eq(6) input').val(), // 납기일자 가져오기
 	                    e_code: $(this).find('td:eq(7) select').val(), // 담당자 가져오기
 	                };
+	            
+	                // 유효성 검사 추가
+	                if (!ship.ship_num || !ship.ship_date || !ship.ship_deli ) {
+	                    isValid = false;
+	                    return false; // 유효성 검사 실패 시 반복문 종료
+	                }
+	            
 	                shipList.push(ship); //수주정보를 배열에 추가
 	            }
 	        });
+	        
+	     	// 모든 요소가 유효한지 확인
+	        if (!isValid) {
+	            // 유효성 검사 실패 시 처리
+	            alert("양식을 모두 입력하세요.");
+	            return; // 함수 종료
+	        }
+
+	        
 	        
 	        // 배열을 JSON 형식으로 직렬화
 	        var jsonData = JSON.stringify(shipList);

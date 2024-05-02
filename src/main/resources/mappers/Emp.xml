@@ -12,7 +12,15 @@
 		SELECT * FROM EMP WHERE e_id = #{chk_Id}
 	</select>
 	
-
+	<select id="ybUserLogin" parameterType="Emp" resultType="Emp">
+		SELECT * from emp where e_id = #{e_id} and e_pw = #{e_pw} and e_wd = 0
+	</select>
+	
+	<insert id="signInsert" parameterType="Emp">    
+	    INSERT INTO emp(e_code, e_name, e_id, e_pw, e_ph, d_code, e_admin, e_wd)
+		VALUES (e_code_SEQ.nextval, #{e_name}, #{e_id}, #{e_pw}, #{e_ph}, #{d_code}, 1, 0)
+		
+	</insert>
 	
 	
 </mapper>

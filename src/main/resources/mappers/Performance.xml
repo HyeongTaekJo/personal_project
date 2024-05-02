@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.oracle.personal_project.PerformanceMapper">
+
+	<select id="performanceCnt" parameterType="Performance" resultType="int">
+		SELECT
+		         COUNT(*)
+		        
+	    FROM 	performance
+	    
+	    WHERE
+	        1=1
+            <if test="date_from != '' and date_to == ''">
+                AND pm_date &gt;= #{date_from}
+            </if>
+            <if test="date_from == '' and date_to != ''">
+                AND pm_date &lt;= #{date_to}
+            </if>
+            <if test="date_from != '' and date_to != ''">
+                AND pm_date BETWEEN #{date_from} AND #{date_to}
+            </if>
+            <if test="pm_code != null and pm_code != ''">
+                AND pm_code LIKE '%' || #{pm_code} || '%'
+            </if>
+	        <if test="p_code != null and p_code != ''">
+	            AND p_code LIKE '%' || #{p_code} || '%'
+	        </if>
+	        <if test="c_code != null and c_code != ''">
+	            AND c_code LIKE '%' || #{c_code} || '%'
+	        </if>
+	        <if test="e_code != null and e_code != ''">
+	            AND e_code LIKE '%' || #{e_code} || '%'
+	        </if>
+	        
+	</select>
+		
+	<select id="performanceList" parameterType="Performance" resultType="Performance">
+		SELECT *
+		FROM(
+		    SELECT rownum rn, b.*
+		    FROM (
+		        SELECT   
+					 A.pm_code AS pm_code,
+					 A.wo_code AS wo_code,
+		             A.p_code AS p_code,
+		             B.p_name AS p_name,
+		             A.c_code AS c_code,
+		             C.c_name AS c_name,
+		             E.qty AS order_qty,
+		             A.qty AS qty,
+		             A.e_code AS e_code,
+		             D.e_name AS e_name,
+		             A.pm_date AS pm_date
+		             
+	        FROM performance A
+	        LEFT OUTER JOIN product B ON A.p_code = B.p_code
+	        LEFT OUTER JOIN customer C ON A.c_code = C.c_code
+	        LEFT OUTER JOIN emp D ON A.e_code = D.e_code
+	        LEFT OUTER JOIN work_order E ON A.wo_code = E.wo_code
+		    
+		    WHERE
+		       1=1
+	            <if test="date_from != '' and date_to == ''">
+	                AND A.pm_date &gt;= #{date_from}
+	            </if>
+	            <if test="date_from == '' and date_to != ''">
+	                AND A.pm_date &lt;= #{date_to}
+	            </if>
+	            <if test="date_from != '' and date_to != ''">
+	                AND A.pm_date BETWEEN #{date_from} AND #{date_to}
+	            </if>
+	            <if test="pm_code != null and pm_code != ''">
+	                AND A.pm_code LIKE '%' || #{pm_code} || '%'
+	            </if>
+		        <if test="p_code != null and p_code != ''">
+		            AND A.p_code LIKE '%' || #{p_code} || '%'
+		        </if>
+		        <if test="c_code != null and c_code != ''">
+		            AND A.c_code LIKE '%' || #{c_code} || '%'
+		        </if>
+		        <if test="e_code != null and e_code != ''">
+		            AND A.e_code LIKE '%' || #{e_code} || '%'
+		        </if>
+		      ORDER BY A.pm_code ASC  
+		    ) b
+		)
+	    WHERE rn BETWEEN #{start} AND #{end}
+	</select>
+	
+	
+	<insert id="newWorkOrderInsert2" parameterType="java.util.List">    
+	    insert into work_order(wo_code, plan_code, mc_code, wc_code, wo_status, wo_date, ins_emp, ins_date, up_emp, up_date, qty)
+		select WORKORDER_CODE_SEQ.nextval, A.* from(
+		 <foreach item="workOrderList" collection="list" separator="UNION ALL " >
+		   select #{workOrderList.plan_code} as plan_code,
+		   		  #{workOrderList.mc_code} as mc_code,
+		          #{workOrderList.wc_code} as wc_code,
+		          #{workOrderList.wo_status} as wo_status,
+		          #{workOrderList.wo_date} as wo_date,
+		          10001 as ins_emp,
+		          SYSDATE as ins_date,
+		           10001 as up_emp,
+		          SYSDATE as up_date,
+		          #{workOrderList.qty} as qty
+		   from dual
+ 	</foreach>) A
+	</insert>
+	
+	<delete id="deleteWorkOrder2" parameterType="String">
+		DELETE FROM work_order WHERE wo_code = #{wo_code}
+	</delete>
+	
+	
+	<select id="findPerformance2" resultType="String">
+		select * from performance where wo_code = #{wo_code}
+	</select>
+	
+	
+	
+</mapper>

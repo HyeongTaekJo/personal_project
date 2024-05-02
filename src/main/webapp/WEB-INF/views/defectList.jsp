@@ -55,11 +55,11 @@
 	});
 	
 	//삭제
-	function deletePlanOrder(plan_code, pIndex){
-		if(confirm("수주를 삭제하시겠습니까?")){
+	function deletePlanOrder(wo_code, pIndex){
+		if(confirm("작업지시를 삭제하시겠습니까?")){
 			$.ajax({
-					url : "deletePlan",
-					data : {plan_code : plan_code},
+					url : "deleteWorkOrder",
+					data : {wo_code : wo_code},
 					dataType : 'Text',
 					success : function(data){
 						if(data == '1'){
@@ -67,12 +67,10 @@
 							 // table element 찾기
 							  const table = document.getElementById('list');
 							  
-							  // 행(Row) 삭제
-							  //const newRow = table.deleteRow(pIndex);
-							  searchPlanOrder();
+							  searchWorkOrder();
 						}else if(data == '2'){
 							// table element 찾기
-							  alert("생산지시가 등록된 생산계획은 삭제할 수 없습니다.");
+							  alert("실적이 등록된 작업지시는 삭제할 수 없습니다.");
 							 
 						}else {
 							alert("삭제에 실패하였습니다.");
@@ -105,7 +103,7 @@
 	    selectedRowIndex = rowIndex;
 		
 	    $.ajax({
-	        url: 'shipListModal', // shipList를 반환하는 컨트롤러 주소
+	        url: 'planOrderListModal', // shipList를 반환하는 컨트롤러 주소
 	        method: 'GET',
 	        success: function(data) {
 	            // AJAX 요청이 성공하면 테이블에 shipList 데이터 추가
@@ -117,14 +115,14 @@
 	                var row = '<tr>' +
 	                    '<td>' + (index + 1) + '</td>' +
 	                    '<td>' + item.ship_code + '</td>' +
+	                    '<td>' + item.plan_code + '</td>' +
 	                    '<td>' + item.p_name + '</td>' +
 	                    '<td>' + item.c_name + '</td>' +
 	                    '<td style="display: none;">' + item.p_code + '</td>' + // p_code 추가, 숨김 처리
 	                    '<td style="display: none;">' + item.c_code + '</td>' + // c_code 추가, 숨김 처리
-	                    '<td>' + item.adjusted_ship_num + '</td>' +
-	                    '<td>' + item.ship_date + '</td>' +
+	                    '<td>' + item.adjusted_plan_num + '</td>' +
+	                    '<td>' + item.plan_date + '</td>' +
 	                    '<td>' + item.ship_deli + '</td>' +
-	                    '<td>' + item.e_name + '</td>' +
 	                    '<td><button type="button" class="btn btn-info mb-2">선택</button></td>' +
 	                    '</tr>';
 	                tableBody.append(row); // 행 추가
@@ -140,15 +138,15 @@
 	    $(document).on('click', '.btn-info', function() {
 	        // 선택 버튼을 클릭했을 때 해당 행의 데이터를 가져와서 각 셀에 있는 입력 요소의 값으로 설정하는 함수 호출
 	        var ship_code = $(this).closest('tr').find('td:eq(1)').text();
-	        var p_name = $(this).closest('tr').find('td:eq(2)').text();
-	        var c_name = $(this).closest('tr').find('td:eq(3)').text();
-	        var p_code = $(this).closest('tr').find('td:eq(4)').text(); // p_code 가져오기
-	        var c_code = $(this).closest('tr').find('td:eq(5)').text(); // c_code 가져오기
-	        var ship_num = $(this).closest('tr').find('td:eq(6)').text();
-	        var ship_date = $(this).closest('tr').find('td:eq(7)').text();
-	        var ship_deli = $(this).closest('tr').find('td:eq(8)').text();
-	        var e_name = $(this).closest('tr').find('td:eq(9)').text();
-	        selectRow(ship_code, p_name, c_name, p_code, c_code, ship_num, ship_date, ship_deli, e_name); // 함수 호출 시 p_code와 c_code 전달
+	        var plan_code = $(this).closest('tr').find('td:eq(2)').text();
+	        var p_name = $(this).closest('tr').find('td:eq(3)').text();
+	        var c_name = $(this).closest('tr').find('td:eq(4)').text();
+	        var p_code = $(this).closest('tr').find('td:eq(5)').text(); // p_code 가져오기
+	        var c_code = $(this).closest('tr').find('td:eq(6)').text(); // c_code 가져오기
+	        var qty = $(this).closest('tr').find('td:eq(7)').text();
+	        var plan_date = $(this).closest('tr').find('td:eq(8)').text();
+	        var ship_deli = $(this).closest('tr').find('td:eq(9)').text();
+	        selectRow(ship_code,plan_code, p_name, c_name, p_code, c_code, qty, plan_date, ship_deli); // 함수 호출 시 p_code와 c_code 전달
 	    
 	    });
 
@@ -157,18 +155,16 @@
 	}
 	
 	// 선택 버튼 클릭 시 해당 행의 데이터를 가져와서 각 셀에 있는 입력 요소의 값으로 설정하는 함수
-	function selectRow(ship_code, p_name, c_name, p_code, c_code, ship_num, ship_date, ship_deli, e_name) {
+	function selectRow(ship_code,plan_code, p_name, c_name, p_code, c_code, qty, plan_date, ship_deli) {
 		
 		// 현재 선택한 행의 인덱스를 가져오지 않고, 전역 변수로 저장된 인덱스를 사용
 	    var rowIndex = selectedRowIndex;
 	    var row = $('#list tbody tr').eq(rowIndex);
 	    
 	 	// 수주번호 설정
-	    row.find('td:eq(2)').html('<select class="form-select" id="select_custom_yqsaeidzk" name="ship_code" style="width: 150px; padding: 5px; text-align: center;" required><option value="' + ship_code + '" selected>' + ship_code + '</option></select>');
-	    row.find('td:eq(3)').html('<select class="form-select" name="p_code" readonly="readonly" style="width: 200px; padding: 5px; text-align: center;" required><option value="' + p_code + '" selected>' + p_name + '</option></select>'); // 제품 코드(p_code) 설정
-	    row.find('td:eq(4)').html('<select class="form-select" name="c_code"  readonly="readonly" style="width: 200px; padding: 5px; text-align: center;" required><option value="' + c_code + '" selected>' + c_name + '</option></select>'); // 거래처 코드(c_code) 설정
-	    row.find('td:eq(5)').html('<input type="number" class="form-control" style="width: 100px; readonly="readonly" name="ship_num" value="' + ship_num + '">'); // 수주수량 설정
-	    row.find('td:eq(7)').html('<input type="date" class="form-control" style="width: 150px; readonly="readonly" name="ship_deli" value="' + ship_deli + '">'); // 납기일자 설정
+	    row.find('td:eq(2)').html('<select class="form-select" id="select_custom_yqsaeidzk" name="plan_code" style="width: 150px; padding: 5px; text-align: center;" required><option value="' + plan_code + '" selected>' + plan_code + '</option></select>');
+	    row.find('td:eq(5)').html('<input type="number" class="form-control" style="width: 100px; readonly="readonly" name="qty" value="' + qty + '">'); // 계획수량 설정
+	    row.find('td:eq(7)').html('<select class="form-select" name="wo_status"  readonly="readonly" style="width: 100px; padding: 5px; text-align: center;" required><option value=114 selected>작업전</option></select>'); // 작업상태 설정
 	    
 	    // 모달 창 닫기
 	    $('#exampleModalScrollable').modal('hide');
@@ -197,14 +193,14 @@
 
 	    // Cell에 텍스트 추가
 	    newCell1.innerText = ''; // NO
-	    newCell2.innerText = ''; // 생산계획번호
+	    newCell2.innerText = ''; // 작업지시번호
 
 	    // newCell3에 콤보박스 추가 (거래처 구분)
 	    select2 = document.createElement("select");
 	    var selectId = "select_custom_" + uniqueId(); // 고유한 ID 생성
 	    select2.setAttribute("class", "form-select");
 	    select2.setAttribute("id", selectId); // 콤보박스에 고유한 ID 설정
-	    select2.setAttribute("name", "ship_code");
+	    select2.setAttribute("name", "plan_code");
 	    select2.setAttribute("style", "width: 160px; padding: 5px; text-align: center;");
 	    select2.setAttribute("required", ""); // 거래처 구분 선택 필수로 설정
 
@@ -213,7 +209,7 @@
 	    placeholderOption.setAttribute("disabled", "true");
 	    placeholderOption.setAttribute("selected", "true");
 	    placeholderOption.setAttribute("hidden", "true");
-	    placeholderOption.textContent = "수주번호 선택";
+	    placeholderOption.textContent = "계획번호 선택";
 	    select2.appendChild(placeholderOption);
 
 	    // 셀에 콤보박스 추가
@@ -227,9 +223,6 @@
 	    function uniqueId() {
 	        return Math.random().toString(36).substr(2, 9);
 	    }
-
-	    // 콤보박스 클릭 시 모달 열기 이벤트 핸들러 등록
-	    //select2.addEventListener('click', openModal);
 	    
 	 	// 콤보박스 클릭 이벤트 핸들러 수정
 	    select2.addEventListener('click', function() {
@@ -239,24 +232,84 @@
 	        openModal(rowIndex);
 	    });
 	    
+ 	    // newCell4에 콤보박스 추가 (작업장)
+	    var select3 = document.createElement("select");
+	    select3.setAttribute("class", "form-select");
+	    select3.setAttribute("id", "validationCustom06_e");
+	    select3.setAttribute("name", "wc_code");
+	    select3.setAttribute("style", "width: 200px; padding: 5px; text-align: center;");
+	    select3.setAttribute("required", ""); // 거래처 담당자 선택 필수로 설정
+	
+	    // 거래처 담당자 목록 추가
+	    <c:forEach var="WorkCenterList" items="${WorkCenterList}">
+	      var option = document.createElement("option");
+	      option.setAttribute("value", "${WorkCenterList.wc_code}");
+	      option.textContent = "${WorkCenterList.wc_name}";
+	      select3.appendChild(option);
+	    </c:forEach>
+	
+	    // 셀에 콤보박스 추가
+	    var div3 = document.createElement("div");
+	    div3.setAttribute("class", "col-md-2");
+	
+	    div3.appendChild(select3);
+	    newCell4.appendChild(div3);
+		  
+		  
+	    // newCell5에 콤보박스 추가 (설비)
+	    var select4 = document.createElement("select");
+	    select4.setAttribute("class", "form-select");
+	    select4.setAttribute("id", "validationCustom07_s");
+	    select4.setAttribute("name", "mc_code");
+	    select4.setAttribute("style", "width: 160px; padding: 5px; text-align: center;");
+	    select4.setAttribute("required", ""); // 거래처 구분 선택 필수로 설정
+	
+	    // 거래처 구분 목록 추가
+	    <c:forEach var="MachineList" items="${MachineList}">
+	      var option = document.createElement("option");
+	      option.setAttribute("value", "${MachineList.mc_code}");
+	      option.textContent = "${MachineList.mc_name}";
+	      select4.appendChild(option);
+	    </c:forEach>
+	
+	    // 셀에 콤보박스 추가
+	    var div4 = document.createElement("div");
+	    div4.setAttribute("class", "col-md-2");
+	
+	    div4.appendChild(select4);
+	    newCell5.appendChild(div4);
 
-	    //newCell4 제품명
-	    newCell4.innerHTML = '<input type="text" class="form-control" name="p_code" placeholder="제품" style="width: 200px; padding: 5px; text-align: center;" required readonly="readonly">';
+	    //newCell6 생산계획수량
+	    newCell6.innerHTML = '<input type="number" class="form-control" name="plan_qty" placeholder="계획수량" style="width: 100px; padding: 5px; text-align: center;" required readonly="readonly">';
 
-	    //newCell5 거래처명
-	    newCell5.innerHTML = '<input type="text" class="form-control" name="c_code" placeholder="거래처" style="width: 150px; padding: 5px; text-align: center;" required readonly="readonly">';
-
-	    //newCell6 수주수량
-	    newCell6.innerHTML = '<input type="number" class="form-control" name="ship_num" placeholder="수주수량" style="width: 100px; padding: 5px; text-align: center;" required readonly="readonly">';
-
-	    //newCell7 에 계획수량
-	    newCell7.innerHTML = '<input type="number" class="form-control" name="qty" placeholder="계획수량" style="width: 100px; padding: 5px; text-align: center;" required>';
-
-	    //newCell8 납기일자 (date 형식)
-	    newCell8.innerHTML = '<input type="date" class="form-control" name="ship_date" style="width: 150px; padding: 5px; text-align: center; " required readonly="readonly">';
-
+	    //newCell7 지시수량
+	    newCell7.innerHTML = '<input type="number" class="form-control" name="qty" placeholder="지시수량" style="width: 100px; padding: 5px; text-align: center;" required>';
+	    
+        //newCell8에 콤보박스 추가 (작업상태)
+	    var select5 = document.createElement("select");
+	    select5.setAttribute("class", "form-select");
+	    select5.setAttribute("id", "validationCustom07_s");
+	    select5.setAttribute("name", "wo_status");
+	    select5.setAttribute("style", "width: 160px; padding: 5px; text-align: center;");
+	    select5.setAttribute("required", ""); // 거래처 구분 선택 필수로 설정
+	
+	    // 거래처 구분 목록 추가
+	    <c:forEach var="workStatusList" items="${workStatusList}">
+	      var option = document.createElement("option");
+	      option.setAttribute("value", "${workStatusList.wo_status}");
+	      option.textContent = "${workStatusList.s_name}";
+	      select5.appendChild(option);
+	    </c:forEach>
+	
+	    // 셀에 콤보박스 추가
+	    var div5 = document.createElement("div");
+	    div5.setAttribute("class", "col-md-2");
+	
+	    div5.appendChild(select5);
+	    newCell8.appendChild(div5);
+	    
 	    //newCell9 계획일자 (date 형식)
-	    newCell9.innerHTML = '<input type="date" class="form-control" name="plan_date" style="width: 150px; padding: 5px; text-align: center;" required>';
+	    newCell9.innerHTML = '<input type="date" class="form-control" name="wo_date" style="width: 150px; padding: 5px; text-align: center;" required>';
 
 	 	// 삭제 버튼 클릭 이벤트 핸들러 등록
 	    var deleteButton = document.createElement("button");
@@ -285,17 +338,17 @@
 	$(function() {
 	    $('#searchButton').click(function() {
 	        // 조건에 따른 검색 실행
-	        searchPlanOrder();
+	        searchWorkOrder();
 	    });
 	}) 
 
     // 조건에 따른 검색을 수행하는 함수
-    function searchPlanOrder() {
+    function searchWorkOrder() {
 		
 		
         var sendData = $('#form1').serialize();
         //alert(sendData);
-        location.href = "planOrderList?" + sendData;
+        location.href = "defectList?" + sendData;
     }
 	
 	$(function() {
@@ -306,32 +359,32 @@
 	        
 	        // 테이블의 각 행을 순회하며 값을 가져와서 배열에 추가
 	        $('#list tbody tr').each(function() {
-	            var plan_code = $(this).find('td:eq(1)').text(); // 생산계획 코드 가져오기
-	            if (!plan_code.trim()) { // plan_code가 비어있는 경우만 추가
+	            var wo_code = $(this).find('td:eq(1)').text(); // 생산계획 코드 가져오기
+	            if (!wo_code.trim()) { // plan_code가 비어있는 경우만 추가
 	                var plan = {
-	                    ship_code: $(this).find('td:eq(2) select').val(), // 제품코드 가져오기
-	                    p_code: $(this).find('td:eq(3) select').val(), // 거래처코드 가져오기
-	                    c_code: $(this).find('td:eq(4) select').val(), // 수주수량 가져오기
-	                    ship_num: $(this).find('td:eq(5) input').val(), // 수주일자 가져오기
-	                    qty: $(this).find('td:eq(6) input').val(), // 수주일자 가져오기
-	                    ship_deli: $(this).find('td:eq(7) input').val(), // 납기일자 가져오기
-	                    plan_date: $(this).find('td:eq(8) input').val(), // 납기일자 가져오기
+	                	plan_code: $(this).find('td:eq(2) select').val(), // 생산계획 가져오기
+	                	wc_code: $(this).find('td:eq(3) select').val(), // 작업장 가져오기
+	                	mc_code: $(this).find('td:eq(4) select').val(), // 설비 가져오기
+	                	plan_qty: $(this).find('td:eq(5) input').val(), // 생산계획수량 가져오기
+	                    qty: $(this).find('td:eq(6) input').val(), // 지시수량 가져오기
+	                    wo_status: $(this).find('td:eq(7) select').val(), // 작업상태 가져오기
+	                    wo_date: $(this).find('td:eq(8) input').val(), // 지시일자 가져오기
 	                };
 	                
 	                // 유효성 검사 추가
-	                if (!plan.ship_code) {
+	                if (!plan.plan_code) {
 	                    isValid = false;
 	                    $(this).find('td:eq(2) select').focus(); // 해당 입력란으로 포커스 이동
 	                    return false; // 유효성 검사 실패 시 반복문 종료
-	                } else if (!plan.p_code) {
+	                } else if (!plan.wc_code) {
 	                    isValid = false;
 	                    $(this).find('td:eq(3) select').focus(); // 해당 입력란으로 포커스 이동
 	                    return false; // 유효성 검사 실패 시 반복문 종료
-	                } else if (!plan.c_code) {
+	                } else if (!plan.mc_code) {
 	                    isValid = false;
 	                    $(this).find('td:eq(4) select').focus(); // 해당 입력란으로 포커스 이동
 	                    return false; // 유효성 검사 실패 시 반복문 종료
-	                } else if (!plan.ship_num) {
+	                } else if (!plan.plan_qty) {
 	                    isValid = false;
 	                    $(this).find('td:eq(5) input').focus(); // 해당 입력란으로 포커스 이동
 	                    return false; // 유효성 검사 실패 시 반복문 종료
@@ -339,33 +392,33 @@
 	                    isValid = false;
 	                    $(this).find('td:eq(6) input').focus(); // 해당 입력란으로 포커스 이동
 	                    return false; // 유효성 검사 실패 시 반복문 종료
-	                } else if (!plan.ship_deli) {
+	                } else if (!plan.wo_status) {
 	                    isValid = false;
-	                    $(this).find('td:eq(7) input').focus(); // 해당 입력란으로 포커스 이동
+	                    $(this).find('td:eq(7) select').focus(); // 해당 입력란으로 포커스 이동
 	                    return false; // 유효성 검사 실패 시 반복문 종료
-	                } else if (!plan.plan_date) {
+	                } else if (!plan.wo_date) {
 	                    isValid = false;
 	                    $(this).find('td:eq(8) input').focus(); // 해당 입력란으로 포커스 이동
 	                    return false; // 유효성 검사 실패 시 반복문 종료
 	                }
 	                
 	                // 계획수량이 수주수량보다 많은지 확인
-	                if (parseInt(plan.qty) > parseInt(plan.ship_num)) {
+	                if (parseInt(plan.qty) > parseInt(plan.plan_qty)) {
 	                    isValid = false;
 	                    $(this).find('td:eq(6) input').focus(); // 해당 입력란으로 포커스 이동
-	                    alert("계획수량은 수주수량보다 많을 수 없습니다.");
+	                    alert("지시수량은 계획수량보다 많을 수 없습니다.");
 	                    return false; // 유효성 검사 실패 시 반복문 종료
 	                }
 	                
 	                // 각 수주별 계획수량의 합 계산
-	                if (!totalQtyMap[plan.ship_code]) {
+	                if (!totalQtyMap[plan.plan_code]) {
 	                    // 수주번호가 totalQtyMap에 없는 경우
-	                    totalQtyMap[plan.ship_code] = parseInt(plan.qty);
+	                    totalQtyMap[plan.plan_code] = parseInt(plan.qty);
 	                   
 	                } else {
 	                    // 수주번호가 totalQtyMap에 있는 경우ㅋ
-	                    totalQtyMap[plan.ship_code] += parseInt(plan.qty);
-	                    totalQtyMap[plan.ship_code]
+	                    totalQtyMap[plan.plan_code] += parseInt(plan.qty);
+	                    totalQtyMap[plan.plan_code]
 	                }
 	                
 	                planList.push(plan); //수주정보를 배열에 추가
@@ -379,18 +432,18 @@
 	            return; // 함수 종료
 	        }
 	        
-	        // 각 수주별 생산계획 합과 수주 수량 비교
-	        for (var ship_code in totalQtyMap) {
+	        // 각 수주별 지시수량 합과 생산계획 수량 비교
+	        for (var plan_code in totalQtyMap) {
 	        	
 	        	var row = $('#list tbody tr').filter(function() {
-	                return $(this).find('td:eq(2) select').val() === ship_code;
+	                return $(this).find('td:eq(2) select').val() === plan_code;
 	            });
 	        	
-	            // 해당 행의 수주수량을 가져옴
-	            var ship_num = parseInt(row.find('td:eq(5) input').val());
-	            if (totalQtyMap[ship_code] > ship_num) {
+	            // 해당 행의 생산계획을 가져옴
+	            var plan_qty = parseInt(row.find('td:eq(5) input').val());
+	            if (totalQtyMap[plan_code] > plan_qty) {
 	                isValid = false;
-	                alert("수주번호 " + ship_code + "에 대한 계획수량의 합산이 수주수량보다 많습니다.");
+	                alert("생산계획번호 " + plan_code + "에 대한 지시수량의 합산이 생산계획수량보다 많습니다.");
 	                break; // 유효성 검사 실패 시 반복문 종료
 	            }
 	        }
@@ -407,7 +460,7 @@
 	        // Ajax 요청 보내기
 	        $.ajax({
 	            type: "POST", // POST 방식으로 요청
-	            url: "newPlanInsert", // 요청을 보낼 URL
+	            url: "newWorkOrderInsert", // 요청을 보낼 URL
 	            contentType: "application/json", // 전송할 데이터의 타입을 JSON으로 설정
 	            data: jsonData, // JSON 데이터를 전송
 	            success: function(response) {
@@ -482,7 +535,7 @@
     }
     function confirmAndSearch() {
         closePopup(); // 팝업 창 닫기
-        searchPlanOrder(); // 검색 실행
+        searchWorkOrder(); // 검색 실행
     }
 </script>
 
@@ -505,12 +558,12 @@
                 <tr>
                   <th>No.</th>
                   <th>수주번호</th>
+                  <th>생산계획번호</th>
                   <th>제품명</th>
                   <th>거래처명</th>
-                  <th>수주수량</th>
-                  <th>수주일자</th>
-                  <th>납품일자</th>
-                  <th>등록자</th>
+                  <th>계획수량</th>
+                  <th>계획일자</th>
+                  <th>납기일자</th>
                   <th>선택</th>
                 </tr>
               </thead>
@@ -545,29 +598,29 @@
 			        <!-- 상품목록 -->
 				    <div class="mb-8">
 				       <!-- heading -->
-				       <h1 class="mb-1">생산계획 등록</h1>
-				       <p>총  ${planOrderCnt} 건</p>
+				       <h1 class="mb-1">불량 조회</h1>
+				       <p>총  ${defectCnt} 건</p>
 				    </div>
 				    <!-- 제품조회 -->
 				     <div class="row" id="k" style="margin-bottom: 10px;">
 					    <div class="col-md-2">
-					        <label for="validationCustom01" class="form-label">생산계획번호</label>
-					        <input type="text" class="form-control" id="validationCustom01" name="plan_code" style="max-width: 200px;" placeholder="생산계획번호 입력" oninput="checkNumber(this);" value="${planOrder.plan_code}">
+					        <label for="validationCustom01" class="form-label">불량번호</label>
+					        <input type="text" class="form-control" id="validationCustom01" name="df_code" style="max-width: 200px;" placeholder="불량번호 입력" oninput="checkNumber(this);" value="${defect.df_code}">
 					    </div>
 					    
 					    <!-- 수주 시작일자 -->
 					     <div class="col-md-2">
-					        <label for="startDate" class="form-label">생산계획 시작일자</label>
-					        <input type="date" class="form-control" id="startDate" name="date_from" value="${planOrder.date_from}">
+					        <label for="startDate" class="form-label">실적 시작일자</label>
+					        <input type="date" class="form-control" id="startDate" name="date_from" value="${defect.date_from}">
 					    </div> 
 					    <!-- 수주 종료일자 -->
 					    <div class="col-md-2">
-					        <label for="endDate" class="form-label">생산계획 종료일자</label>
-					        <input type="date" class="form-control" id="endDate" name="date_to" value="${planOrder.date_to}">
+					        <label for="endDate" class="form-label">실적 종료일자</label>
+					        <input type="date" class="form-control" id="endDate" name="date_to" value="${defect.date_to}">
 					    </div>
 					    
 					</div>
-				
+				 
 					<!-- 분류 -->
 					<div class="row" id="k2" style="margin-bottom: 20px;">
 					    <div class="col-md-2">
@@ -575,7 +628,7 @@
 					        <select class="form-select" id="validationCustom04" name="p_code" style="max-width: 200px;" >
 					        	<option value="" selected="selected">전체</option>
 					        	<c:forEach var="productList" items="${productList}">
-					        		 <option value="${productList.p_code}" ${productList.p_code eq planOrder.p_code ? 'selected' : ''}>${productList.p_name}</option>
+					        		 <option value="${productList.p_code}" ${productList.p_code eq defect.p_code ? 'selected' : ''}>${productList.p_name}</option>
 					        		<%-- <option value="${bigList.b_code}">${bigList.b_name}</option> --%>
 					        	</c:forEach>
 					        </select>
@@ -585,11 +638,24 @@
 					        <select class="form-select" id="validationCustom04" name="c_code" style="max-width: 200px;">
 					        	<option value="" selected="selected">전체</option>
 					        	<c:forEach var="customerList" items="${customerList}">
-					        		<option value="${customerList.c_code}" ${customerList.c_code eq planOrder.c_code ? 'selected' : ''}>${customerList.c_name}</option>
+					        		<option value="${customerList.c_code}" ${customerList.c_code eq defect.c_code ? 'selected' : ''}>${customerList.c_name}</option>
 					        		<%-- <option value="${smallList.s_code}">${smallList.s_name}</option> --%>
 					        	</c:forEach>
 					        </select>
 					    </div>
+					    
+					    <div class="col-md-2">
+					        <label for="validationCustom04" class="form-label">담당자</label>
+					        <select class="form-select" id="validationCustom04" name="e_code" style="max-width: 200px;" >
+					        	<option value="" selected="selected">전체</option>
+					        	<c:forEach var="empList" items="${empList}">
+					        		 <option value="${empList.e_code}" ${empList.e_code eq defect.e_code ? 'selected' : ''}>${empList.e_name}</option>
+					        		<%-- <option value="${bigList.b_code}">${bigList.b_name}</option> --%>
+					        	</c:forEach>
+					        </select>
+					    </div>
+					    
+					   
 					    
 					    <!-- 검색 버튼 -->
 			            <div class="col-md-2 col-xxl-2 d-lg-block mt-auto" style="margin-left: 5px;">
@@ -601,13 +667,13 @@
 	        <!-- 조건 입력창 끝 --> 
 	        
 	        <!-- 버튼 -->
-	        <div>
-			  <!-- Secondary Button -->
+	      <!--   <div>
+			  Secondary Button
 			  <button type="button" class="btn btn-secondary mb-2" style="width: 100px;"  onclick='addRow()'> 추가 </button>
 			
-			  <!-- Success Button -->
+			  Success Button
 			  <button type="button"   id="saveButton"  class="btn btn-success mb-2" style="width: 100px;"> 저장 </button>
-	        </div>
+	        </div> -->
 	        
         	<!-- 리스트 출력 -->   
 	       <!-- table -->
@@ -617,32 +683,32 @@
 		             <thead class="table-light">
 		                <tr>
 		                   <th>No.</th>
-		                   <th>생산계획번호</th>
-		                   <th>수주번호</th>
+		                   <th>불량번호</th>
+		                   <th>작업지시번호</th>
 		                   <th>제품명</th>
 		                   <th>거래처명</th>
-		                   <th>수주수량</th>
-		                   <th>계획수량</th>
-		                   <th>납기일자</th>
-		                   <th>계획일자</th>
-		                   <th>삭제</th>
+		                   <th>지시수량</th>
+		                   <th>불량수량</th>
+		                   <th>등록자</th>
+		                   <th>실적일자</th>
+		                  <!--  <th>삭제</th> -->
 		                </tr>
 		             </thead>
 		             <tbody>
-		             	<c:forEach var="planOrderList" items="${planOrderList }" varStatus="status">
-			                <tr id="planOrder${status.index }">
+		             	<c:forEach var="defectList" items="${defectList }" varStatus="status">
+			                <tr id="performance${status.index }">
 			                   <td class="align-middle">${startRow}</td>
-			                   <td class="align-middle">${planOrderList.plan_code}  </td>
-			                   <td class="align-middle" >${planOrderList.ship_code}  </td>
-			                   <td class="align-middle" >${planOrderList.p_name}  </td>
-			                   <td class="align-middle">${planOrderList.c_name}  </td>
-			                   <td class="align-middle">${planOrderList.ship_num}  </td>
-			                   <td class="align-middle">${planOrderList.qty}  </td>
-			                   <td class="align-middle">${planOrderList.ship_deli}  </td>
-			                   <td class="align-middle">${planOrderList.plan_date}  </td>
-					           <td class="align-middle">
-						            <button type="button" class="btn btn-danger deleteButton" onclick="deletePlanOrder('${planOrderList.plan_code}', '${status.index+1}')">삭제</button>
-						        </td>
+			                   <td class="align-middle">${defectList.df_code}  </td>
+			                   <td class="align-middle">${defectList.wo_code}  </td>
+			                   <td class="align-middle">${defectList.p_name}  </td>
+			                   <td class="align-middle">${defectList.c_name}  </td>
+			                   <td class="align-middle">${defectList.order_qty}  </td>
+			                   <td class="align-middle">${defectList.qty}  </td>
+			                   <td class="align-middle">${defectList.e_name}  </td>
+			                   <td class="align-middle">${defectList.fail_date}  </td>
+					           <%-- <td class="align-middle">
+						            <button type="button" class="btn btn-danger deleteButton" onclick="deletePlanOrder('${performanceList.pm_code}', '${status.index+1}')">삭제</button>
+						        </td> --%>
 			                </tr>
 			                <c:set var="startRow" value="${startRow + 1}"/>
 		                </c:forEach>
@@ -662,7 +728,7 @@
 	        <!-- 이전버튼 -->
 	        <c:if test="${page.startPage > page.pageLimit}">
 		        <li class="page-item">
-		          <a class="page-link  mx-1 " href="planOrderList?currentPage=${page.startPage-page.pageLimit}&plan_code=${planOrder.plan_code}&p_code=${planOrder.p_code}&c_code=${planOrder.c_code}&date_from=${planOrder.date_from}&date_to=${planOrder.date_to}" aria-label="Previous">
+		          <a class="page-link  mx-1 " href="defectList?currentPage=${page.startPage-page.pageLimit}&df_code=${defect.df_code}&p_code=${defect.p_code}&c_code=${defect.c_code}&e_code=${defect.e_code}&date_from=${defect.date_from}&date_to=${defect.date_to}" aria-label="Previous">
 		            	이전
 		          </a>
 		        </li>
@@ -670,14 +736,14 @@
 	        
 	        <!-- 페이지 넘버 -->
 	        <c:forEach var="i" begin="${page.startPage }" end="${page.endPage }" varStatus="status">
-	        	<li id="page${status.index}" class="page-item"><a class="page-link mx-1 text-body" href="planOrderList?currentPage=${i}&plan_code=${planOrder.plan_code}&p_code=${planOrder.p_code}&c_code=${planOrder.c_code}&date_from=${planOrder.date_from}&date_to=${planOrder.date_to}">${i }</a></li>
+	        	<li id="page${status.index}" class="page-item"><a class="page-link mx-1 text-body" href="defectList?currentPage=${i}&df_code=${defect.df_code}&p_code=${defect.p_code}&c_code=${defect.c_code}&e_code=${defect.e_code}&date_from=${defect.date_from}&date_to=${defect.date_to}">${i }</a></li>
 	        </c:forEach>
 	         
 	        <!-- 다음 버튼 -->
 	        
 	        <c:if test="${page.endPage < page.totalPage}">
 		        <li class="page-item">
-		          <a class="page-link mx-1 text-body" href="planOrderList?currentPage=${page.startPage+page.pageLimit}&plan_code=${planOrder.plan_code}&p_code=${planOrder.p_code}&c_code=${planOrder.c_code}&date_from=${planOrder.date_from}&date_to=${planOrder.date_to}" aria-label="Next">
+		          <a class="page-link mx-1 text-body"  href="defectList?currentPage=${page.startPage+page.pageLimit}&df_code=${defect.df_code}&p_code=${defect.p_code}&c_code=${defect.c_code}&e_code=${defect.e_code}&date_from=${defect.date_from}&date_to=${defect.date_to}" aria-label="Next">
 		            	다음
 		          </a>
 		        </li>
